@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "243607616372",
+    "project_id": "transpot-ed532",
+    "storage_bucket": "transpot-ed532.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243607616372:android:91cd4a2d29f488f3094a21",
+        "android_client_info": {
+          "package_name": "com.helwan.transpot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243607616372-757ndqlvu0co538f3svb1bqg38uj2ala.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDundKSul6A39qomKPl7F35OLe7F0_OKt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243607616372-757ndqlvu0co538f3svb1bqg38uj2ala.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

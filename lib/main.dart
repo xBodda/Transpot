@@ -1,34 +1,49 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:transpot/components/routes.dart';
 import 'package:transpot/components/splash_screen.dart';
+import 'package:transpot/services/auth_model.dart';
+import 'package:transpot/services/main_variables.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:transpot/views/user/checkout.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  runApp(const MyApp());
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     
-    return MaterialApp(
-      title: 'Transpot',
-      theme: ThemeData(
-        scaffoldBackgroundColor: primaryLightColor,
-        fontFamily: "Lato",
-        textTheme: const TextTheme(
-          bodyText1: TextStyle(color: secondaryColorDark),
-          bodyText2: TextStyle(color: secondaryColorDark),
+    return MultiProvider(
+      providers:[
+        Provider<AuthModel>(create: (_) => AuthModel(FirebaseAuth.instance)),
+        StreamProvider(
+          initialData: 0,
+          create: (context) => context.read<AuthModel>().authStateChanges,
         ),
-        inputDecorationTheme: inputDecorationTheme(),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        ChangeNotifierProvider(create: (context) => MainVariables()),
+      ],
+      child: MaterialApp(
+        title: 'Transpot',
+        theme: ThemeData(
+          scaffoldBackgroundColor: primaryLightColor,
+          fontFamily: "Lato",
+          textTheme: const TextTheme(
+            bodyText1: TextStyle(color: secondaryColorDark),
+            bodyText2: TextStyle(color: secondaryColorDark),
+          ),
+          inputDecorationTheme: inputDecorationTheme(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const SplashPage(),
+        routes: routes,
       ),
-      home: const SplashPage(),
-      routes: routes,
     );
   }
 
