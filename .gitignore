@@ -48,3 +48,6 @@ app.*.map.json
 android/app/src/main/AndroidManifest.xml
 
 lib/utils/api.dart
+
+Tasks.txt
+android/app/src/main/AndroidManifest.xml
