@@ -443,25 +443,27 @@ class _FindBusState extends State<FindBus> {
       _originController.text = place1;
     });
 
-    messengerState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${p.description} - $lat/$lng'),
+        content: Text('${p.description}'),
+        duration: Duration(milliseconds: 3000),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: secondaryColorDark,
       ),
     );
   }
 
-  Future<void> displayDestinationPrediction(
-      Prediction? p, ScaffoldMessengerState messengerState) async {
+  Future<void> displayDestinationPrediction(Prediction? p, ScaffoldMessengerState messengerState) async {
     if (p == null) {
       return;
     }
     // get detail (lat/lng)
-    final _places = GoogleMapsPlaces(
+    final places = GoogleMapsPlaces(
       apiKey: API.apiKey,
       apiHeaders: await const GoogleApiHeaders().getHeaders(),
     );
 
-    final detail = await _places.getDetailsByPlaceId(p.placeId!);
+    final detail = await places.getDetailsByPlaceId(p.placeId!);
     final geometry = detail.result.geometry!;
     final lat = geometry.location.lat;
     final lng = geometry.location.lng;
@@ -470,9 +472,12 @@ class _FindBusState extends State<FindBus> {
       _destinationController.text = place2;
     });
 
-    messengerState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${p.description} - $lat/$lng'),
+        content: Text('${p.description}'),
+        duration: Duration(milliseconds: 3000),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: secondaryColorDark,
       ),
     );
   }
