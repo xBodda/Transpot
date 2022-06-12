@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/home.dart';
+import 'package:transpot/views/user/find_bus.dart';
 
 import '../utils/FormError.dart';
 
@@ -447,9 +453,73 @@ class _SignUpState extends State<SignUp> {
   }
 
   void onPressedIconWithText() async {
-    if(_formKey.currentState!.validate()){
-      _formKey.currentState!.save();
-    }
+    Future.delayed(const Duration(milliseconds: 400), () async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          //await context.read<auth_viewModel>().signOut();
+          await context.read<AuthModel>().signUp(
+              email: _email,
+              password: _password,
+              fullName: _fullName,
+              phoneNumber: _phoneNumber,
+              governorate: _selectedGov,
+              address: _address);
+
+          // ignore: use_build_context_synchronously
+          User? user = context.read<AuthModel>().CurrentUser();
+
+          if (user != null) {
+            // ignore: use_build_context_synchronously
+            Keyboard.hideKeyboard(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Welcome to Transpot"),
+                duration: Duration(milliseconds: 3000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: secondaryColorDark,
+              ),
+            );
+
+            await Future.delayed(const Duration(seconds: 2), () {});
+
+            // ignore: use_build_context_synchronously
+            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const FindBus()),(Route<dynamic> route) => false,);
+            print("----------${user.email}----------");
+          } else {
+            // setState(() {
+            //   _stateTextWithIcon = ButtonState.fail;
+            // });
+            // Future.delayed(Duration(milliseconds: 1600), () {
+            //   setState(() {
+            //     _stateTextWithIcon = ButtonState.idle;
+            //   });
+            // });
+            print("Error Signing Up");
+          }
+        } catch (e) {
+          print(e);
+          // setState(() {
+          //   _stateTextWithIcon = ButtonState.fail;
+          // });
+          // Future.delayed(Duration(milliseconds: 1600), () {
+          //   setState(() {
+          //     _stateTextWithIcon = ButtonState.idle;
+          //   });
+          // });
+        }
+      } else {
+        // setState(() {
+        //   _stateTextWithIcon = ButtonState.success;
+        // });
+        // Future.delayed(Duration(milliseconds: 1600), () {
+        //   setState(() {
+        //     _stateTextWithIcon = ButtonState.idle;
+        //   });
+        // });
+      }
+    });
   }
 
 }

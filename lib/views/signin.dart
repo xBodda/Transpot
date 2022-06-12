@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
 import 'package:transpot/views/signup.dart';
+import 'package:transpot/views/user/find_bus.dart';
 
 import '../utils/FormError.dart';
 
@@ -250,8 +255,53 @@ class _SignInState extends State<SignIn> {
   }
 
   void onPressedIconWithText() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-    }
+    Future.delayed(const Duration(milliseconds: 600), () async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          await context.read<AuthModel>().signOut();
+          await context.read<AuthModel>().signIn(email: _email, password: _password);
+
+          User? user = context.read<AuthModel>().CurrentUser();
+
+          if (user != null) {
+            Keyboard.hideKeyboard(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Welcom to Transpot"),
+                duration: Duration(milliseconds: 3000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: secondaryColorDark,
+              ),
+            );
+
+            await Future.delayed(const Duration(seconds: 2), () {});
+
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const FindBus()), (Route<dynamic> route) => false,);
+            print("----------${user.email}----------");
+          } else {
+            // setState(() {
+            //   _stateTextWithIcon = ButtonState.fail;
+            // });
+            // Future.delayed(Duration(milliseconds: 2000), () {
+            //   setState(() {
+            //     _stateTextWithIcon = ButtonState.idle;
+            //   });
+            // });
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Error Signing In"),
+              duration: Duration(milliseconds: 3000),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: secondaryColorDark,
+            ),
+          );
+          print(e);
+        }
+      }
+    });
   }
 }
