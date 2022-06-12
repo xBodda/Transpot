@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/user/find_bus.dart';
@@ -43,8 +45,9 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.exit_to_app),
             title: const Text("Sign Out"),
-            onTap: () {
-              // Navigator.of(context).pushNamed(FromTo.routeName);
+            onTap: () async {
+              await context.read<AuthModel>().signOut();
+              Navigator.of(context).pushNamed(Home.routeName);
             },
           ),
         ],
