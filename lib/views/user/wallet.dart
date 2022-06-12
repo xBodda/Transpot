@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:transpot/components/drawer.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/user/checkout.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({Key? key}) : super(key: key);
@@ -14,8 +16,30 @@ class Wallet extends StatefulWidget {
 }
 
 class _WalletState extends State<Wallet> {
+
+  int _balance = 0;
+    
+  User? userx = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userx!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        _balance = documentSnapshot['Balance'];
+        setState(() {
+          _balance = _balance;
+        });
+      }
+    });
+
+    setState(() {
+      _balance = _balance;
+    });
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -57,9 +81,9 @@ class _WalletState extends State<Wallet> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text("Balance", style: TextStyle(fontSize: 20)),
-                        Text("145.00 EGP", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      children: [
+                        const Text("Balance", style: TextStyle(fontSize: 20)),
+                        Text('$_balance EGP', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     
@@ -69,7 +93,9 @@ class _WalletState extends State<Wallet> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton.icon(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    Navigator.of(context).pushNamed(Checkout.routeName);
+                  },
                   style: ElevatedButton.styleFrom(
                     side: const BorderSide(width: 2, color: primaryColor),
                     primary: Colors.white,
