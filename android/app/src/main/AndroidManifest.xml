@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.transpot">
+   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
         android:label="transpot"
         android:icon="@mipmap/ic_launcher">
@@ -31,6 +32,6 @@
             android:value="2" />
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-                    android:value="" />
+                    android:value="AIzaSyCfyqFlydkxLBFhyTtKdrLnkGyyRP4zqA4" />
     </application>
 </manifest>

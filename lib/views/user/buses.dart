@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transpot/components/drawer.dart';
+import 'package:transpot/services/auth_model.dart';
+import 'package:transpot/services/main_variables.dart';
+import 'package:transpot/services/user_model.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:transpot/views/user/find_bus.dart';
 
 class Bus extends StatefulWidget {
   const Bus({Key? key}) : super(key: key);
@@ -12,8 +18,25 @@ class Bus extends StatefulWidget {
 }
 
 class _BusState extends State<Bus> {
+  late Future allBuses;
+  late User u;
+
+  late int total_cost = 0;
+
+  @override
+  void initState() {
+    u = Provider.of<AuthModel>(context, listen: false).CurrentUser()!;
+    allBuses = Provider.of<MainVariables>(context, listen: false).getAllBuses();
+    super.initState();
+  }
+
+  late User user;
   @override
   Widget build(BuildContext context) {
+    user = context.read<AuthModel>().CurrentUser()!;
+    final UserModel u = UserModel(uid: user.uid);
+    return Consumer<MainVariables>(builder: (_, gv, __) {
+      // gv.getAllBuses();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -31,22 +54,32 @@ class _BusState extends State<Bus> {
         drawer: const AppDrawer(),
         body: SizedBox(
           width: double.infinity,
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    // BusButton("Bus 1"),
-                    busCard(),
-                  ],
-                ),
-              )
-            ],
+          child: 
+          // ListView(
+          //   children: [
+          //     Padding(
+          //       padding: const EdgeInsets.all(8.0),
+          //       child: Column(
+          //         children: [
+          //           // BusButton("Bus 1"),
+          //           busCard(),
+          //         ],
+          //       ),
+          //     )
+          //   ],
+          // ),
+          ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: gv.BusDetails.length,
+              itemBuilder: (context, index) => busCard(gv.BusDetails[index]['name'],
+                        gv.BusDetails[index]['seats'])
           ),
         ),
       ),
     );
+    });
   }
 
   ElevatedButton busButton(String time) {
@@ -146,7 +179,7 @@ class _BusState extends State<Bus> {
     );
   }
 
-  Card busCard() {
+  Card busCard(String name, int seats) {
     return Card(
       color: primaryColor,
       elevation: 10,
@@ -166,35 +199,28 @@ class _BusState extends State<Bus> {
                   "",
                 ),
               ),
-              title: const Text(
-                "A56 Bus",
-                style: TextStyle(fontSize: 20),
+              title: Text(
+                name,
+                style: const TextStyle(fontSize: 20),
               ),
               subtitle: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.start,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2.0),
-                        child: Text(
-                            "From: City Stars, Heliopolis, Egypt"
-                            ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2.0),
-                        child: Text(
-                            "To: City Center, New Cairo, Egypt"
-                            ),
-                      ),
-                      Padding(
+                    children: [
+                      const Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 2.0),
                         child: Text(
                             "06/06/2020, 10:00 AM"
+                            ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2.0),
+                        child: Text(
+                            "Seats Available: $seats"
                             ),
                       )
                     ],
@@ -207,7 +233,16 @@ class _BusState extends State<Bus> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
-                      Navigator.of(context).pushNamed(Bus.routeName);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Bus Booked"),
+                          duration: Duration(milliseconds: 3000),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: secondaryColorDark,
+                        ),
+                      );
+                      await Future.delayed(const Duration(seconds: 2), () {});
+                      Navigator.of(context).pushNamed(FindBus.routeName);
                     },
                     style: ElevatedButton.styleFrom(
                       side: const BorderSide(

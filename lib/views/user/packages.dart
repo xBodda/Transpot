@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transpot/components/drawer.dart';
+import 'package:transpot/services/auth_model.dart';
+import 'package:transpot/services/main_variables.dart';
+import 'package:transpot/services/user_model.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
 import 'package:transpot/views/user/payment.dart';
 
@@ -14,9 +20,33 @@ class Packages extends StatefulWidget {
 }
 
 class _PackagesState extends State<Packages> {
+  final _formKey = GlobalKey<FormState>();
+
+  final List<String> _errors = [];
+  late int package = 0;
+
+  late User u;
 
   @override
-  Widget build(Object context) {
+  void initState() {
+    u = Provider.of<AuthModel>(context, listen: false).CurrentUser()!;
+    super.initState();
+  }
+
+  late User user;
+
+  @override
+  Widget build(BuildContext context) {
+    user = context.read<AuthModel>().CurrentUser()!;
+    final UserModel u = UserModel(uid: user.uid);
+    return Consumer<MainVariables>(builder: (_, gv, __) {
+    gv.getUserData(user);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          package = gv.UserDetails['Package'];
+        });
+    });
+    // print(gv.UserDetails['Package']);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -41,11 +71,14 @@ class _PackagesState extends State<Packages> {
             ),
             child: ListView(
               children: [
-                Column(
-                  children: [
-                    packageCard('Free Package',0.0,'Free'),
-                    packageCard('Premium Package',150.0, 'Subscribe'),
-                  ],
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      packageCard('Free Package',0.0, package == 1 ? 'Owned' : 'Free', u, 1, package),
+                      packageCard('Premium Package',150.0, package == 2 ? 'Owned' : 'Subscribe',u ,2, package),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -53,9 +86,10 @@ class _PackagesState extends State<Packages> {
         )
       ),
     );
+    });
   }
 
-  Card packageCard(String packageName, double price, String buttonName) {
+  Card packageCard(String packageName, double price, String buttonName, UserModel u,int packageId, int currentPackage) {
     return Card(
         elevation: 2,
         shape: const RoundedRectangleBorder(
@@ -113,9 +147,7 @@ class _PackagesState extends State<Packages> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                    onPressed: () async {
-                      Navigator.pushNamed(context, Payment.routeName);
-                    },
+                    onPressed: () => currentPackage == packageId ? {} : onPressedIconWithText(u),
                     style: ElevatedButton.styleFrom(
                       primary: primaryColor,
                       padding: const EdgeInsets.symmetric(
@@ -131,6 +163,38 @@ class _PackagesState extends State<Packages> {
           ),
         ),
       );
+  }
+
+   onPressedIconWithText(UserModel u) async {
+    Future.delayed(const Duration(milliseconds: 400), () async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          // ignore: use_build_context_synchronously
+          User? user = context.read<AuthModel>().CurrentUser();
+
+          if (user != null) {
+            // ignore: use_build_context_synchronously
+            Keyboard.hideKeyboard(context);
+
+            u.addToCart('2', "Premium Package", 150);
+
+            // ignore: use_build_context_synchronously
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const Payment()),
+              (Route<dynamic> route) => false,
+            );
+          } else {
+            print("Error Signing Up");
+          }
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        print("Error Signing Up");
+      }
+    });
   }
 
 }

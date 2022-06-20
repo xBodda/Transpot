@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:transpot/models/driver.dart';
 import 'package:transpot/utils/size_config.dart';
 
 const primaryColor = Color(0xffdaa520);
@@ -85,3 +87,32 @@ const List<String> governorates = [
   'South Sinai',
   'Suez',
 ];
+class DummyData {
+  static List<Driver> nearbyDrivers = [
+    Driver(
+        "First",
+        "https://cbsnews2.cbsistatic.com/hub/i/r/2017/12/20/205852a8-1105-48b5-98d4-d9ec18a577e0/thumbnail/1200x630/8cb0b627b158660d1e0a681a76fb012c/uber-europe-uk-851372958.jpg",
+        4,
+        "FirstId",
+        BusDetail(
+            "firstCarId", "firstCarCompany", "firstCarModel", " firstCarName"),
+        const LatLng(30.071654115870853, 31.22046920034743)),
+    Driver(
+        "Second",
+        "https://cbsnews2.cbsistatic.com/hub/i/r/2017/12/20/205852a8-1105-48b5-98d4-d9ec18a577e0/thumbnail/1200x630/8cb0b627b158660d1e0a681a76fb012c/uber-europe-uk-851372958.jpg",
+        3,
+        "Second",
+        BusDetail("secondCarId", "secondCarCompany", "secondCarModel",
+            " secondCarName"),
+        const LatLng(30.069291124259752, 31.21890815476264)),
+    Driver(
+        "Third",
+        "https://cbsnews2.cbsistatic.com/hub/i/r/2017/12/20/205852a8-1105-48b5-98d4-d9ec18a577e0/thumbnail/1200x630/8cb0b627b158660d1e0a681a76fb012c/uber-europe-uk-851372958.jpg",
+        4,
+        "ThirdId",
+        BusDetail(
+            "thirdCarId", "thirdCarCompany", "thirdCarModel", " thridCarName"),
+        const LatLng(30.071110957748346, 31.22180494042988)),
+  ];
+}
+

@@ -28,7 +28,7 @@ class _CheckoutState extends State<Checkout> {
   late User user;
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    // SizeConfig().init(context);
     user = context.read<AuthModel>().CurrentUser()!;
     final UserModel u = UserModel(uid: user.uid);
     return GestureDetector(
@@ -84,14 +84,6 @@ class _CheckoutState extends State<Checkout> {
                                         fontWeight: FontWeight.normal,
                                         color: secondaryColorDark),
                                   ),
-                                  Text(
-                                    "100 EGP",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: 'Lato',
-                                        fontWeight: FontWeight.bold,
-                                        color: secondaryColorDark),
-                                  )
                                 ],
                               ),
                               SizedBox(

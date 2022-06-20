@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transpot/views/driver/driver_signin.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/signin.dart';
 import 'package:transpot/views/signup.dart';
@@ -10,6 +11,7 @@ import 'package:transpot/views/user/payment.dart';
 import 'package:transpot/views/user/wallet.dart';
 
 final Map<String, WidgetBuilder> routes = {
+  // User Routes
   SignUp.routeName: (context) => const SignUp(),
   SignIn.routeName: (context) => const SignIn(),
   FindBus.routeName: (context) => const FindBus(),
@@ -19,4 +21,7 @@ final Map<String, WidgetBuilder> routes = {
   Packages.routeName: (context) => const Packages(),
   Payment.routeName: (context) => const Payment(),
   Checkout.routeName: (context) => const Checkout(),
+
+  // Driver Routes
+  DriverSignIn.routeName: (context) => const DriverSignIn(),
 };

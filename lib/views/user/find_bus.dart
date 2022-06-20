@@ -7,8 +7,10 @@ import 'package:geocoder2/geocoder2.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:provider/provider.dart';
 import 'package:transpot/components/drawer.dart';
 import 'package:transpot/services/location_service.dart';
+import 'package:transpot/services/map_service.dart';
 import 'package:transpot/utils/api.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
@@ -120,8 +122,9 @@ class _FindBusState extends State<FindBus> {
 
   @override
   Widget build(BuildContext context) {
+    final mapModel = Provider.of<MapService>(context);
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      // onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -144,17 +147,22 @@ class _FindBusState extends State<FindBus> {
                 height: 350,
                 child: GoogleMap(
                   mapType: MapType.normal,
-                  initialCameraPosition: _kGooglePlex,
+                  initialCameraPosition: CameraPosition(
+                      target: const LatLng(30.07193729969429, 31.220732056799562),
+                      zoom: mapModel.currentZoom),
                   myLocationEnabled: trackLiveLocation,
                   // myLocationButtonEnabled: true,
                   trafficEnabled: true,
+                  tiltGesturesEnabled: false,
+                  rotateGesturesEnabled: false,
+                  zoomGesturesEnabled: true,
                   polygons: _polygons,
                   polylines: _polylines,
-
+                  onCameraMove: mapModel.onCameraMove,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                   },
-                  markers: Set.of(_markers),
+                  markers: mapModel.markers,
                   onTap: (point) {
                     setState(() {
                       polygonLatLngs.add(point);
@@ -534,52 +542,20 @@ class _FindBusState extends State<FindBus> {
       //Formated Address
       print("the cureent address is------${data.address}");
 
-      currentlong = currentlocation.longitude;
+      currentlong = currentlocation.longitude; 
       currentlat = currentlocation.latitude;
 
       print('the current live  lat is ${currentlocation.latitude}');
       print('the current live long is ${currentlocation.longitude}');
 
       setState(() async {
-        //8t change
-        // if(currentlocation.isMock==true){
-
         if (_locationSubscription != null) {
           if (place1 != data.address) {
             setState(() async {
               place1 = data.address;
-              //  directions =
-              //   await LocationService().getDirections(place1, place2);
-              //  DistanceofLocation =
-              //    await LocationService().getDistance(place1, place2);
-              //  TimeofLocation =
-              //    await LocationService().getTime(place1, place2);
-
-              //  setState(() {
-              //    TimeofLocation;
-              //     DistanceofLocation;
-              //    directions;
-              //  });
-
-              //  if(i!=1){
-              //     _goToPlace(
-              //       directions['start_location']['lat'],
-              //       directions['start_location']['lng'],
-              //       directions['bounds_ne'],
-              //       directions['bounds_sw'],
-              //     );
-              //  }
-              //  i++;
-
-              //     _setPolyline(
-              //       directions['polyline_decoded'],
-              //     );
             });
-            // }), );
           }
         }
-        ;
-//}
       });
     });
   }

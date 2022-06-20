@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/driver/driver_signin.dart';
 import 'package:transpot/views/signin.dart';
 import 'package:transpot/views/signup.dart';
 import 'package:transpot/views/user/find_bus.dart';
@@ -83,7 +87,7 @@ class _HomeState extends State<Home> {
                             style: TextStyle(color: secondaryColorDark, fontSize: 14),
                           ),
                           onPressed: () async {
-                            Navigator.pushNamed(context, FindBus.routeName);
+                             Navigator.pushNamed(context, DriverSignIn.routeName);
                           },
                         ),
                     ],

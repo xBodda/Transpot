@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transpot/components/routes.dart';
 import 'package:transpot/components/splash_screen.dart';
 import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/services/main_variables.dart';
+import 'package:transpot/services/map_service.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:transpot/views/user/checkout.dart';
@@ -12,6 +14,7 @@ import 'package:transpot/views/user/checkout.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
   runApp(MyApp());
 }
 
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return MultiProvider(
+      
       providers:[
         Provider<AuthModel>(create: (_) => AuthModel(FirebaseAuth.instance)),
         StreamProvider(
@@ -28,9 +32,11 @@ class MyApp extends StatelessWidget {
           create: (context) => context.read<AuthModel>().authStateChanges,
         ),
         ChangeNotifierProvider(create: (context) => MainVariables()),
+        ChangeNotifierProvider(create: (context) => MapService()),
       ],
       child: MaterialApp(
         title: 'Transpot',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: primaryLightColor,
           fontFamily: "Lato",

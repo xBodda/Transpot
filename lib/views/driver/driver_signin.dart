@@ -2,29 +2,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transpot/services/auth_model.dart';
+import 'package:transpot/utils/FormError.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
 import 'package:transpot/views/signup.dart';
 import 'package:transpot/views/user/find_bus.dart';
 
-import '../utils/FormError.dart';
+class DriverSignIn extends StatefulWidget {
+  const DriverSignIn({Key? key}) : super(key: key);
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
-
-  static String routeName = "/signin";
+  static String routeName = "/driver_signin";
 
   @override
-  _SignInState createState() => _SignInState();
+  _DriverSignInState createState() => _DriverSignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _DriverSignInState extends State<DriverSignIn> {
   final _formKey = GlobalKey<FormState>();
 
   late String _email;
   late String _password;
-
 
   final List<String> _errors = [];
 
@@ -74,7 +72,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   SizedBox(height: getSuitableScreenWidth(10)),
                   const Text(
-                    "Sign in with your email and password \nor sign in with social media",
+                    "Sign in with your email and password \nyou are now logging in as a driver",
                     style: TextStyle(fontFamily: 'Lato'),
                     textAlign: TextAlign.center,
                   ),
@@ -162,7 +160,8 @@ class _SignInState extends State<SignIn> {
                                 vertical: getSuitableScreenWidth(20),
                                 horizontal: getSuitableScreenWidth(30)),
                             suffixIcon: Padding(
-                              padding: EdgeInsets.only(right: getSuitableScreenWidth(26)),
+                              padding: EdgeInsets.only(
+                                  right: getSuitableScreenWidth(26)),
                               child: Icon(
                                 Icons.lock_outline_rounded,
                                 size: getSuitableScreenWidth(28),
@@ -260,7 +259,9 @@ class _SignInState extends State<SignIn> {
         _formKey.currentState!.save();
         try {
           await context.read<AuthModel>().signOut();
-          await context.read<AuthModel>().signIn(email: _email, password: _password);
+          await context
+              .read<AuthModel>()
+              .signIn(email: _email, password: _password);
 
           User? user = context.read<AuthModel>().CurrentUser();
 
@@ -278,11 +279,13 @@ class _SignInState extends State<SignIn> {
 
             await Future.delayed(const Duration(seconds: 2), () {});
 
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const FindBus()), (Route<dynamic> route) => false,);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const FindBus()),
+              (Route<dynamic> route) => false,
+            );
             print("----------${user.email}----------");
-          } else {
-
-          }
+          } else {}
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transpot/components/drawer.dart';
+import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/home.dart';
 import 'package:transpot/views/user/checkout.dart';
 
 class Wallet extends StatefulWidget {

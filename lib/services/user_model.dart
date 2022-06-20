@@ -19,6 +19,10 @@ class UserModel {
       'Governorate': governorate,
       'Address': address,
       'Balance': 0,
+      'Package': 1,
+      'type': 'user',
+      'lat': 0,
+      'lng': 0,
     }, SetOptions(merge: true));
   }
 

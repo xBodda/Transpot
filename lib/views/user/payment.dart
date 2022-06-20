@@ -44,6 +44,7 @@ class _PaymentState extends State<Payment>{
     user = context.read<AuthModel>().CurrentUser()!;
     final UserModel u = UserModel(uid: user.uid);
     return Consumer<MainVariables>(builder: (_, gv, __) {
+    gv.getUserData(user);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -71,23 +72,15 @@ class _PaymentState extends State<Payment>{
               // shrinkWrap: true,
               children: <Widget>[
                 Row(
-                  children: [
-                    const Text(
+                  children: const [
+                    Text(
                       "Checkout",
                       style: TextStyle(
                         fontSize: 24,
                         color: primaryColor,
                       ),
                     ),
-                    const Spacer(),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(
-                          Icons.close,
-                          size: 25,
-                        ))
+                    Spacer(),
                   ],
                 ),
                 const SizedBox(
@@ -298,43 +291,103 @@ class _PaymentState extends State<Payment>{
   }
 
   void onPressedIconWithText(MainVariables gv, UserModel u) async {
+      bool isValid = false;
       Future.delayed(const Duration(milliseconds: 600), () {
         try {
           if (gv.paymentMethod != "Select Method") {
-            List<dynamic> tempCart = [];
-            Map map = Map<String, dynamic>();
-
             for (int i = 0; i < gv.userCart.length; i++) {
-
               if(gv.userCart[i].product == "Wallet Topup") {
-                u.addBalance(gv.userCart[i].price);
+                try {
+                  if (gv.paymentMethod != "Wallet" && gv.userCart[i].product == "Wallet Topup") {
+                    gv.addBalance(user, gv.userCart[i].price);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Balance added to your wallet"),
+                      duration: Duration(milliseconds: 3000),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: secondaryColorDark,
+                    ),
+                  );
+                    isValid = true;
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("You Can't Pay With Wallet"),
+                      duration: Duration(milliseconds: 3000),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: secondaryColorDark,
+                    ),
+                  );
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              } else if(gv.userCart[i].product == "Premium Package") {
+                try {
+                  if (gv.paymentMethod == "Wallet") {
+                    if(gv.UserDetails['Balance'] >= gv.userCart[i].price) {
+                      gv.updateBalance(user, gv.userCart[i].price);
+                      gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Package Upgraded"),
+                          duration: Duration(milliseconds: 3000),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: secondaryColorDark,
+                        ),
+                      );
+                      isValid = true;
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        action: SnackBarAction(
+                          label: "Go To Wallet", 
+                          onPressed: (){
+                            Navigator.of(context).pushNamed(Wallet.routeName);
+                          }
+                          ),
+                        content: const Text("No Enough Balance"),
+                        duration: const Duration(milliseconds: 3000),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: secondaryColorDark,
+                      ),
+                    );
+                    }
+                  } else {
+                    gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Package Upgraded"),
+                        duration: Duration(milliseconds: 3000),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: secondaryColorDark,
+                      ),
+                    );
+                    isValid = true;
+                  }
+                
+                } catch (e) {
+                  print(e);
+                }
               }
-
-
-              // tempCart.add(map = {
-              //   "id": gv.userCart[i].product.id,
-              //   "option1": gv.userCart[i].option1,
-              //   "quantity": gv.userCart[i].quantity,
-              //   "total": gv.userCart[i].quantity * gv.userCart[i].product.price,
-              // });
             }
-            // String orderID = customAlphabet("0123456789", 18);
-            // u.addOrder(orderID, tempCart, gv.paymentMethod, gv.total);
-            u.DeleteAttribute("cart");
-            gv.resetCart();
-            gv.resetPmethod();
-            Future.delayed(const Duration(milliseconds: 1250), () {
-              Navigator.of(context).pushNamed(Wallet.routeName);
-            });
+            if(isValid) {
+              u.DeleteAttribute("cart");
+              gv.resetCart();
+              gv.resetPmethod();
+              Future.delayed(const Duration(milliseconds: 1250), () {
+                Navigator.of(context).pushNamed(Wallet.routeName);
+              });
+            }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Choose Payment Method"),
-              duration: Duration(milliseconds: 3000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: secondaryColorDark,
-            ),
-          );
+              const SnackBar(
+                content: Text("Choose Payment Method"),
+                duration: Duration(milliseconds: 3000),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: secondaryColorDark,
+              ),
+            );
           }
         } catch (e) {
           print(e);
