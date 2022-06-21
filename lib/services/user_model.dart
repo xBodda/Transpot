@@ -11,8 +11,10 @@ class UserModel {
 
   int userBalance = 0;
 
+  String userType = '';
+
   Future addUserData(String fullName, String phoneNumber, String governorate,
-      String address) async {
+      String address,String type) async {
     return await usersInformation.doc(uid).set({
       'Full Name': fullName,
       'Phone Number': phoneNumber,
@@ -20,7 +22,7 @@ class UserModel {
       'Address': address,
       'Balance': 0,
       'Package': 1,
-      'type': 'user',
+      'type': type,
       'lat': 0,
       'lng': 0,
     }, SetOptions(merge: true));
@@ -31,6 +33,7 @@ class UserModel {
       .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         userBalance = documentSnapshot['Balance'];
+        userType = documentSnapshot['type'];
       }
     });
   }
@@ -93,4 +96,6 @@ class UserModel {
       'Balance': newBalance
     }, SetOptions(merge: true));
   }
+
+  String get UserType => userType;
 }

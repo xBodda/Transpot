@@ -7,6 +7,7 @@ import 'package:transpot/components/splash_screen.dart';
 import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/services/main_variables.dart';
 import 'package:transpot/services/map_service.dart';
+import 'package:transpot/services/notifier_service.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:transpot/views/user/checkout.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (context) => MainVariables()),
         ChangeNotifierProvider(create: (context) => MapService()),
+        ChangeNotifierProvider<UINotifiersModel>(create: (context) => UINotifiersModel()),
       ],
       child: MaterialApp(
         title: 'Transpot',

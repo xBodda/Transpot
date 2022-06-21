@@ -2,25 +2,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:transpot/services/auth_model.dart';
+import 'package:transpot/utils/FormError.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/user/find_bus.dart';
 
-import '../utils/FormError.dart';
 
+class DriverSignUp extends StatefulWidget {
+  const DriverSignUp({Key? key}) : super(key: key);
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
-
-  static String routeName = "/signup";
+  static String routeName = "/driver_signup";
 
   @override
-  _SignUpState createState() => _SignUpState();
+  _DriverSignUpState createState() => _DriverSignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _DriverSignUpState extends State<DriverSignUp> {
   final _formKey = GlobalKey<FormState>();
 
   late String _email;
@@ -72,10 +71,10 @@ class _SignUpState extends State<SignUp> {
                       height: getSuitableScreenWidth(40),
                     ),
                     Text(
-                      "Register An Account",
+                      "Register A Driver Account",
                       style: TextStyle(
                         color: secondaryColorDark,
-                        fontSize: getSuitableScreenWidth(25),
+                        fontSize: getSuitableScreenWidth(22),
                         fontFamily: 'Lato',
                         fontWeight: FontWeight.bold,
                       ),
@@ -457,7 +456,7 @@ class _SignUpState extends State<SignUp> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         try {
-          await context.read<AuthModel>().signOut();
+          //await context.read<auth_viewModel>().signOut();
           await context.read<AuthModel>().signUp(
               email: _email,
               password: _password,
@@ -465,7 +464,7 @@ class _SignUpState extends State<SignUp> {
               phoneNumber: _phoneNumber,
               governorate: _selectedGov,
               address: _address,
-              type: 'user');
+              type: 'driver');
 
           // ignore: use_build_context_synchronously
           User? user = context.read<AuthModel>().CurrentUser();
@@ -489,13 +488,15 @@ class _SignUpState extends State<SignUp> {
             Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const FindBus()),(Route<dynamic> route) => false,);
             print("----------${user.email}----------");
           } else {
+
             print("Error Signing Up");
           }
         } catch (e) {
           print(e);
+
         }
       } else {
-        print("Form is not valid");
+
       }
     });
   }

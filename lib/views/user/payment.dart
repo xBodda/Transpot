@@ -42,7 +42,7 @@ class _PaymentState extends State<Payment>{
   @override
   Widget build(BuildContext context) {
     user = context.read<AuthModel>().CurrentUser()!;
-    final UserModel u = UserModel(uid: user.uid);
+    final UserModel u = UserModel(uid: user.uid); 
     return Consumer<MainVariables>(builder: (_, gv, __) {
     gv.getUserData(user);
     return GestureDetector(

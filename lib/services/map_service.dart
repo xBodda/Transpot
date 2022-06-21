@@ -53,16 +53,14 @@ class MapService extends ChangeNotifier {
   }
 
   void _getUserLocation() async {
-    _location.enableBackgroundMode(enable: true);
+    _location.changeSettings(interval: 1000, accuracy: location.LocationAccuracy.low, distanceFilter: 10);
+    // _location.enableBackgroundMode(enable: true);
     GeoData data;
     //get cureent address & lat & long
     //f 10 seconds are passed AND* if the phone is moved at least 5 meters, give the location.
     //location.changeSettings(accuracy: loc.LocationAccuracy.balanced,interval: 1000); ///not sure ,distanceFilter: 2
     _locationSubscription = _location.onLocationChanged.handleError((onError) {
       print("error in listen location${onError}");
-
-      _locationSubscription?.cancel();
-        _locationSubscription = null;
     }).listen((location.LocationData currentlocation) async {
       //GeoData convert current lat long to address
       data = await Geocoder2.getDataFromCoordinates(
@@ -72,21 +70,14 @@ class MapService extends ChangeNotifier {
       //Formated Address
       print("the cureent address is------${data.address}");
 
-      currentlong = currentlocation.longitude;
-      currentlat = currentlocation.latitude;
-
+      // currentlong = currentlocation.longitude;
+      // currentlat = currentlocation.latitude;
+      pickupFormFieldController.text = data.address;
+      // _pickupPosition = _currentPosition;
       print('the current live  lat is ${currentlocation.latitude}');
       print('the current live long is ${currentlocation.longitude}');
     });
-    _location.getLocation().then((data) async {
-      // _currentPosition = LatLng(data.latitude, data.longitude);
-      _pickupPosition = _currentPosition;
-
-      // pickupFormFieldController.text = await mapRepo.getPlaceNameFromLatLng(LatLng(data.latitude, data.longitude));
-      updatePickupMarker();
-      notifyListeners();
-    });
-    updatePickupMarker();
+    // updatePickupMarker();
     notifyListeners();
   }
 

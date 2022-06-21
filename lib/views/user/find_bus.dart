@@ -62,12 +62,12 @@ class _FindBusState extends State<FindBus> {
   @override
   void initState() {
     super.initState();
-    getLiveLocation();
     place1;
     place2;
     _setMarker(const LatLng(30.047040, 31.346476));
     location.changeSettings(interval: 1000, accuracy: loc.LocationAccuracy.low, distanceFilter: 10);
-    location.enableBackgroundMode(enable: true);
+    // location.enableBackgroundMode(enable: true);
+    // getLiveLocation();
   }
 
   void _setMarker(LatLng point) {
@@ -183,7 +183,7 @@ class _FindBusState extends State<FindBus> {
                     children: [
                       TextFormField(
                         onTap: getOriginLocations,
-                        controller: _originController,
+                        controller: mapModel.pickupFormFieldController,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         keyboardType: TextInputType.emailAddress,
                         onSaved: (newValue) => place1 = newValue!,
@@ -283,8 +283,6 @@ class _FindBusState extends State<FindBus> {
                       ),
                       ElevatedButton.icon(
                         onPressed: () async {
-                          getLiveLocation();
-
                           directions = await LocationService()
                               .getDirections(place1, place2);
                           DistanceofLocation = await LocationService()
@@ -515,7 +513,7 @@ class _FindBusState extends State<FindBus> {
       trafficEnabledflow = true;
     });
 
-    location.enableBackgroundMode(enable: true);
+    // location.enableBackgroundMode(enable: true);
     GeoData data;
     var currentlat;
     var currentlong;

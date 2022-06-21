@@ -6,6 +6,8 @@ import 'package:transpot/utils/FormError.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/driver/driver_find_ride.dart';
+import 'package:transpot/views/driver/driver_signup.dart';
 import 'package:transpot/views/signup.dart';
 import 'package:transpot/views/user/find_bus.dart';
 
@@ -212,6 +214,16 @@ class _DriverSignInState extends State<DriverSignIn> {
                                   fontWeight: FontWeight.bold)),
                         ),
                         SizedBox(height: getSuitableScreenHeight(20)),
+                        TextButton(
+                          child: const Text(
+                            "Create A Driver Account",
+                            style: TextStyle(
+                                color: secondaryColorDark, fontSize: 14),
+                          ),
+                          onPressed: () async {
+                            Navigator.pushNamed(context, DriverSignUp.routeName);
+                          },
+                        ),
                       ],
                     ),
                   )
@@ -270,7 +282,7 @@ class _DriverSignInState extends State<DriverSignIn> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Welcom to Transpot"),
+                content: Text("Welcome to Transpot"),
                 duration: Duration(milliseconds: 3000),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: secondaryColorDark,
@@ -281,7 +293,7 @@ class _DriverSignInState extends State<DriverSignIn> {
 
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const FindBus()),
+              MaterialPageRoute(builder: (context) => const DriverFindRide()),
               (Route<dynamic> route) => false,
             );
             print("----------${user.email}----------");

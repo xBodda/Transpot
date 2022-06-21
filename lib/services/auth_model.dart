@@ -43,12 +43,13 @@ class AuthModel {
       required String fullName,
       required String phoneNumber,
       required String governorate,
-      required String address}) async {
+      required String address,
+      required String type}) async {
       try {
         UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
         User? user = result.user;
 
-        await UserModel(uid: user!.uid).addUserData(fullName, phoneNumber, governorate, address);
+        await UserModel(uid: user!.uid).addUserData(fullName, phoneNumber, governorate, address, type);
         return result;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {

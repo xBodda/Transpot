@@ -269,7 +269,7 @@ class _SignInState extends State<SignIn> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("Welcom to Transpot"),
+                content: Text("Welcome to Transpot"),
                 duration: Duration(milliseconds: 3000),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: secondaryColorDark,
