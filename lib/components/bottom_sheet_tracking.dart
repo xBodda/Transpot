@@ -1,45 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:transpot/services/auth_model.dart';
-import 'package:transpot/services/main_variables.dart';
-import 'package:transpot/services/user_model.dart';
+import 'package:transpot/services/map_service.dart';
+import 'package:transpot/services/notifier_service.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
 
-// ignore: must_be_immutable
-class BottomSheetMapMenu extends StatefulWidget {
+class BottomSheetTrackingMenu extends StatelessWidget {
   String userName = '';
   String phoneNumber = '';
   String busName = '';
   int busSeats = 0;
-  BottomSheetMapMenu({Key? key, required this.userName, required this.phoneNumber, required this.busName, required this.busSeats}) : super(key: key);
-  
-  @override
-  BottomSheetMapMenuState createState() => BottomSheetMapMenuState();
-}
-
-class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
-  late User u;
-
-  @override
-  void initState() {
-    u = Provider.of<AuthModel>(context, listen: false).CurrentUser()!;
-    super.initState();
-  }
-  
-  String statusText = "I am online now";
-  Color statusColor = Colors.green;
-  Widget statusIcon = const Icon(Icons.online_prediction,color: Colors.green,);
-
-  late User user;
+  BottomSheetTrackingMenu(
+      this.userName, this.phoneNumber, this.busName, this.busSeats,
+      {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    user = context.read<AuthModel>().CurrentUser()!;
-    final UserModel u = UserModel(uid: user.uid); 
-    return Consumer<MainVariables>(builder: (_, gv, __) {
-    gv.getUserData(user);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -51,29 +29,30 @@ class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
       child: Column(
         children: <Widget>[
           Material(
-            color: Colors.transparent,
-            child: Padding(
+              color: Colors.transparent,
+              child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () async {
-                          changeStatus(gv, user);
-                        },
+                        onPressed: () async {},
                         style: ElevatedButton.styleFrom(
-                          side: BorderSide(width: 2, color: statusColor),
+                          side: const BorderSide(width: 2, color: Colors.green),
                           primary: Colors.white,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15),
                         ),
-                        icon: statusIcon,
-                        label: Text(statusText,
+                        icon: const Icon(
+                          Icons.online_prediction,
+                          color: Colors.green,
+                        ),
+                        label: const Text("I am online now",
                             style: TextStyle(
                                 fontFamily: 'Lato',
                                 fontWeight: FontWeight.bold,
-                                color: statusColor)),
+                                color: Colors.green)),
                       ),
                       const Divider(
                         color: secondaryColor,
@@ -98,7 +77,7 @@ class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
                             ),
                           ),
                           Text(
-                            "${widget.userName}",
+                            "${userName}",
                             style: const TextStyle(fontFamily: 'Lato'),
                             textAlign: TextAlign.center,
                           ),
@@ -123,7 +102,7 @@ class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
                             ),
                           ),
                           Text(
-                            "${widget.phoneNumber}",
+                            "${phoneNumber}",
                             style: const TextStyle(fontFamily: 'Lato'),
                             textAlign: TextAlign.center,
                           ),
@@ -148,7 +127,7 @@ class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
                             ),
                           ),
                           Text(
-                            "${widget.busName}",
+                            "${busName}",
                             style: const TextStyle(fontFamily: 'Lato'),
                             textAlign: TextAlign.center,
                           ),
@@ -173,43 +152,16 @@ class BottomSheetMapMenuState extends State<BottomSheetMapMenu> {
                             ),
                           ),
                           Text(
-                            "${widget.busSeats}",
+                            "${busSeats}",
                             style: const TextStyle(fontFamily: 'Lato'),
                             textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ],
-                  ))
-          )
+                  )))
         ],
       ),
     );
-    });
-  }
-
-  void changeStatus(MainVariables mv, User u) {
-    if(statusText == "I am online now") {
-      mv.updateDriverStatus(u,"offline");
-      setState(() async {
-        statusText = "I am offline now";
-        statusColor = Colors.red;
-        statusIcon = const Icon(
-          Icons.online_prediction,
-          color: Colors.red,
-        );
-      });
-    } else {
-      mv.updateDriverStatus(u, "online");
-      setState(() async {
-        statusText = "I am online now";
-        statusColor = Colors.green;
-        statusIcon = const Icon(
-          Icons.online_prediction,
-          color: Colors.green,
-        );
-      });
-    }
-    
   }
 }

@@ -12,27 +12,31 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:transpot/components/bottom_sheet_map.dart';
+import 'package:transpot/components/bottom_sheet_tracking.dart';
 import 'package:transpot/components/drawer.dart';
-import 'package:transpot/services/location_service.dart';
 import 'package:transpot/services/map_service.dart';
 import 'package:transpot/services/notifier_service.dart';
 import 'package:transpot/utils/api.dart';
 import 'package:transpot/utils/constants.dart';
-import 'package:transpot/utils/size_config.dart';
-import 'package:transpot/views/user/buses.dart';
 import 'package:location/location.dart' as loc;
 
-class DriverFindRide extends StatefulWidget {
-  const DriverFindRide({Key? key}) : super(key: key);
+class TrackBusScreenArguments {
+  final double passedLat;
+  final double passedLong;
 
-  static String routeName = "/driver_find_ride";
-
-  @override
-  _DriverFindRideState createState() => _DriverFindRideState();
+  TrackBusScreenArguments(this.passedLat, this.passedLong);
 }
 
-class _DriverFindRideState extends State<DriverFindRide> {
+class TrackBus extends StatefulWidget {
+  const TrackBus({Key? key}) : super(key: key);
+
+  static String routeName = "/track_bus";
+
+  @override
+  _TrackBusState createState() => _TrackBusState();
+}
+
+class _TrackBusState extends State<TrackBus> {
   TextEditingController _originController = TextEditingController();
   TextEditingController _destinationController = TextEditingController();
 
@@ -59,8 +63,6 @@ class _DriverFindRideState extends State<DriverFindRide> {
 
   String place1 = 'Enter Origin';
   String place2 = 'Enter Destination';
-
-  
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(30.047040, 31.346476),
@@ -90,6 +92,7 @@ class _DriverFindRideState extends State<DriverFindRide> {
   User? userx = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as TrackBusScreenArguments;
     final mapModel = Provider.of<MapService>(context);
     final uiNotifiersModel = Provider.of<UINotifiersModel>(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -126,13 +129,12 @@ class _DriverFindRideState extends State<DriverFindRide> {
         });
       }
     });
-    
+
     return GestureDetector(
       // onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        floatingActionButton: 
-        FloatingActionButton(
-          onPressed: () { 
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
             getLiveLocation();
           },
           backgroundColor: Colors.green,
@@ -152,8 +154,8 @@ class _DriverFindRideState extends State<DriverFindRide> {
         drawer: const AppDrawer(),
         resizeToAvoidBottomInset: true,
         body: Stack(
-          // width: double.infinity,
-          children: [
+            // width: double.infinity,
+            children: [
               SlidingUpPanel(
                 onPanelSlide: uiNotifiersModel.setOriginDestinationVisibility,
                 onPanelOpened: () {
@@ -183,7 +185,7 @@ class _DriverFindRideState extends State<DriverFindRide> {
                   mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
                       target:
-                          const LatLng(30.07193729969429, 31.220732056799562),
+                         LatLng(args.passedLat, args.passedLong),
                       zoom: mapModel.currentZoom),
                   myLocationEnabled: trackLiveLocation,
                   // myLocationButtonEnabled: true,
@@ -212,22 +214,13 @@ class _DriverFindRideState extends State<DriverFindRide> {
                     Expanded(child: SizedBox()),
                   ],
                 ),
-                panel: BottomSheetMapMenu(userName:userName,phoneNumber:phoneNumber,busName:busName, busSeats:busSeats),
+                panel: BottomSheetTrackingMenu(
+                    userName, phoneNumber, busName, busSeats),
               ),
-          ]
-        ),
+            ]),
       ),
     );
   }
-
-
-
-
-
-
-
-
-
 
   Future<void> _goToPlace(
     double lat,

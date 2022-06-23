@@ -360,7 +360,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
                         ),
                             SizedBox(height: getSuitableScreenHeight(30)),
                             
-                            Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(

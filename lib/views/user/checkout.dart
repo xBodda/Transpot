@@ -206,7 +206,7 @@ class _CheckoutState extends State<Checkout> {
             // ignore: use_build_context_synchronously
             Keyboard.hideKeyboard(context);
 
-            u.addToCart('1', "Wallet Topup", _amount);
+            u.addToCart('1', "Wallet Topup", _amount); 
 
             // ignore: use_build_context_synchronously
             Navigator.pushAndRemoveUntil(

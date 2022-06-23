@@ -369,7 +369,52 @@ class _PaymentState extends State<Payment>{
                 } catch (e) {
                   print(e);
                 }
+              } else if (gv.userCart[i].product == "Regular Ticket") {
+              try {
+                if (gv.paymentMethod == "Wallet") {
+                  if (gv.UserDetails['Balance'] >= gv.userCart[i].price) {
+                    gv.updateBalance(user, gv.userCart[i].price);
+                    // gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Tickets Purchased"),
+                        duration: Duration(milliseconds: 3000),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: secondaryColorDark,
+                      ),
+                    );
+                    isValid = true;
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        action: SnackBarAction(
+                            label: "Go To Wallet",
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(Wallet.routeName);
+                            }),
+                        content: const Text("No Enough Balance"),
+                        duration: const Duration(milliseconds: 3000),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: secondaryColorDark,
+                      ),
+                    );
+                  }
+                } else {
+                  // gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Tickets Purchased"),
+                      duration: Duration(milliseconds: 3000),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: secondaryColorDark,
+                    ),
+                  );
+                  isValid = true;
+                }
+              } catch (e) {
+                print(e);
               }
+            }
             }
             if(isValid) {
               u.DeleteAttribute("cart");

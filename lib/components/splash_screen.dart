@@ -34,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
     if (user != null) {
       // Navigator.pushNamed(context, FindBus.routeName);
       isLoggedIn = true;
-      mv.updateUserLocation(user, ms.Currentlat, ms.Currentlong);
+      // mv.updateUserLocation(user, ms.Currentlat, ms.Currentlong);
     }
     super.initState();
   }

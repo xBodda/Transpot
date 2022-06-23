@@ -87,7 +87,7 @@ const List<String> governorates = [
   'South Sinai',
   'Suez',
 ];
-class DummyData {
+class DummyData { 
   static List<Driver> nearbyDrivers = [
     Driver(
         "First",

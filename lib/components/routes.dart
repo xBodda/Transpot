@@ -5,11 +5,13 @@ import 'package:transpot/views/driver/driver_signup.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/signin.dart';
 import 'package:transpot/views/signup.dart';
+import 'package:transpot/views/user/book_tickets.dart';
 import 'package:transpot/views/user/buses.dart';
 import 'package:transpot/views/user/checkout.dart';
 import 'package:transpot/views/user/find_bus.dart';
 import 'package:transpot/views/user/packages.dart';
 import 'package:transpot/views/user/payment.dart';
+import 'package:transpot/views/user/track_bus.dart';
 import 'package:transpot/views/user/wallet.dart';
 
 final Map<String, WidgetBuilder> routes = {
@@ -23,6 +25,8 @@ final Map<String, WidgetBuilder> routes = {
   Packages.routeName: (context) => const Packages(),
   Payment.routeName: (context) => const Payment(),
   Checkout.routeName: (context) => const Checkout(),
+  BookTickets.routeName: (context) => const BookTickets(),
+  TrackBus.routeName: (context) => const TrackBus(),
 
   // Driver Routes
   DriverSignIn.routeName: (context) => const DriverSignIn(),

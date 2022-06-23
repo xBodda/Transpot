@@ -4,9 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:transpot/components/drawer.dart';
 import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/services/main_variables.dart';
+import 'package:transpot/services/map_service.dart';
 import 'package:transpot/services/user_model.dart';
 import 'package:transpot/utils/constants.dart';
+import 'package:transpot/utils/keyboard.dart';
+import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/user/book_tickets.dart';
 import 'package:transpot/views/user/find_bus.dart';
+import 'package:intl/intl.dart';
+import 'package:transpot/views/user/payment.dart';
+import 'package:transpot/views/user/track_bus.dart';
 
 class Bus extends StatefulWidget {
   const Bus({Key? key}) : super(key: key);
@@ -18,10 +25,15 @@ class Bus extends StatefulWidget {
 }
 
 class _BusState extends State<Bus> {
+  final _formKey = GlobalKey<FormState>();
   late Future allBuses;
   late User u;
 
-  late int total_cost = 0;
+  String formatter = '';
+
+  final int _selectedTickets = 1;
+
+  late int package = 0;
 
   @override
   void initState() {
@@ -33,9 +45,18 @@ class _BusState extends State<Bus> {
   late User user;
   @override
   Widget build(BuildContext context) {
+    late int total_cost = 0;
+    final now = DateTime.now();
+    formatter = DateFormat('EEE, d/M/y').format(now);
     user = context.read<AuthModel>().CurrentUser()!;
     final UserModel u = UserModel(uid: user.uid);
     return Consumer<MainVariables>(builder: (_, gv, __) {
+      gv.getUserData(user);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          package = gv.UserDetails['Package'];
+        });
+      });
       // gv.getAllBuses();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -54,27 +75,15 @@ class _BusState extends State<Bus> {
         drawer: const AppDrawer(),
         body: SizedBox(
           width: double.infinity,
-          child: 
-          // ListView(
-          //   children: [
-          //     Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Column(
-          //         children: [
-          //           // BusButton("Bus 1"),
-          //           busCard(),
-          //         ],
-          //       ),
-          //     )
-          //   ],
-          // ),
+          child:
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: gv.BusDetails.length,
-              itemBuilder: (context, index) => busCard(gv.BusDetails[index]['name'],
-                        gv.BusDetails[index]['seats'])
+              itemBuilder: (context, index) => busCard(gv.BusDetails[index]['name'],gv.BusDetails[index]['seats'],u,gv.BusDetails[index]['id'],
+                    gv.BusDetails[index]['lat'],
+                    gv.BusDetails[index]['lng'])
           ),
         ),
       ),
@@ -102,84 +111,7 @@ class _BusState extends State<Bus> {
     );
   }
 
-  Container BusButton(String time) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(time, textAlign: TextAlign.left ,
-                style: const TextStyle(
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: secondaryColor,
-            thickness: 2,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Text(
-                "Pick Up",
-                style: TextStyle(
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.bold,
-                  color: secondaryColorDark,
-                ),
-              ),
-              Text(
-                "Drop Off",
-                style: TextStyle(
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.bold,
-                  color: secondaryColorDark,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                Text(
-                  "City Stars",
-                  style: TextStyle(
-                    fontFamily: 'Lato',
-                    fontWeight: FontWeight.normal,
-                    color: secondaryColorDark,
-                  ),
-                ),
-                Text(
-                  "City Center",
-                  style: TextStyle(
-                    fontFamily: 'Lato',
-                    fontWeight: FontWeight.normal,
-                    color: secondaryColorDark,
-                  ),
-                ),
-              ],
-            ),
-            const Divider(
-              color: secondaryColor,
-              thickness: 2,
-            ),
-        ],
-      )
-    );
-  }
-
-  Card busCard(String name, int seats) {
+  Card busCard(String name, int seats, UserModel u, String busId, double lat, double lng) {
     return Card(
       color: primaryColor,
       elevation: 10,
@@ -189,84 +121,144 @@ class _BusState extends State<Bus> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: Column(
-          children: [
-            ListTile(
-              leading: const CircleAvatar(
-                radius: 30,
-                backgroundColor: primaryColor,
-                backgroundImage: NetworkImage('https://images.unsplash.com/photo-1562620669-98104534c6cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'),
-                child: Text(
-                  "",
+            children: [
+              ListTile(
+                leading: const CircleAvatar(
+                  radius: 30,
+                  backgroundColor: primaryColor,
+                  backgroundImage: NetworkImage('https://images.unsplash.com/photo-1562620669-98104534c6cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'),
+                  child: Text(
+                    "",
+                  ),
                 ),
+                title: Text(
+                  name,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                subtitle: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2.0),
+                          child: Text(
+                              "$formatter, 10:00 AM"
+                              ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2.0),
+                          child: Text(
+                              "Seats Available: $seats"
+                              ),
+                        ),
+                      ],
+                    )),
               ),
-              title: Text(
-                name,
-                style: const TextStyle(fontSize: 20),
-              ),
-              subtitle: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2.0),
-                        child: Text(
-                            "06/06/2020, 10:00 AM"
-                            ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 2.0),
-                        child: Text(
-                            "Seats Available: $seats"
-                            ),
-                      )
-                    ],
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Bus Booked"),
-                          duration: Duration(milliseconds: 3000),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: secondaryColorDark,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    package == 2 ?
+                    TextButton(
+                          child: const Text(
+                            "Track Bus",
+                            style: TextStyle(
+                                color: primaryLightColor, fontSize: 14),
+                          ),
+                          onPressed: () async {
+                            Navigator.pushNamed(
+                              context,
+                              TrackBus.routeName,
+                              arguments: TrackBusScreenArguments(
+                                lat,
+                                lng
+                              )
+                            );
+                          },
+                        ) : Text(""),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                        context,
+                        BookTickets.routeName,
+                        arguments: ScreenArguments(
+                          'Bus ID',
+                          '$busId',
                         ),
                       );
-                      await Future.delayed(const Duration(seconds: 2), () {});
-                      Navigator.of(context).pushNamed(FindBus.routeName);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      side: const BorderSide(
-                          width: 2, color: primaryColor),
-                      primary: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        side: const BorderSide(
+                            width: 2, color: primaryColor),
+                        primary: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                      ),
+                      icon: const Icon(
+                        Icons.tab,
+                        color: primaryColor,
+                      ),
+                      label: const Text("Book Tickets",
+                          style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor)),
                     ),
-                    icon: const Icon(
-                      Icons.check,
-                      color: primaryColor,
-                    ),
-                    label: const Text("Book Now",
-                        style: TextStyle(
-                            fontFamily: 'Lato',
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor)),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ),
     );
+  }
+
+  List<DropdownMenuItem> getDropdownItems(int ticketNum) {
+    List<DropdownMenuItem<dynamic>> dropdownItems = [];
+    for (int i = 1; i <= ticketNum; i++) {
+      var newItem = DropdownMenuItem(
+        value: i,
+        child: Text('$i'),
+      );
+      dropdownItems.add(newItem);
+    }
+    return dropdownItems;
+  }
+
+  onPressedIconWithText(UserModel u) async {
+    Future.delayed(const Duration(milliseconds: 400), () async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          // ignore: use_build_context_synchronously
+          User? user = context.read<AuthModel>().CurrentUser();
+
+          if (user != null) {
+            // ignore: use_build_context_synchronously
+            Keyboard.hideKeyboard(context);
+            
+            u.addToCart('$_selectedTickets', "Regular Ticket", 5);
+
+            // ignore: use_build_context_synchronously
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const Payment()),
+              (Route<dynamic> route) => false,
+            );
+          } else {
+            print("Error Signing Up");
+          }
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        print("Error Signing Up");
+      }
+    });
   }
 }

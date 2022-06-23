@@ -40,6 +40,9 @@ class MainVariables extends ChangeNotifier {
 
   int _total = 0;
 
+  double busLat = 0;
+  double busLng = 0;
+
   Future getUserData(User user) async {
     await usersInformation
         .doc(user.uid)
@@ -49,6 +52,20 @@ class MainVariables extends ChangeNotifier {
         userBalance = documentSnapshot['Balance'];
         userDetails['Balance'] = documentSnapshot['Balance'];
         userDetails['Package'] = documentSnapshot['Package'];
+      }
+    });
+    notifyListeners();
+  }
+
+  Future getBusData(String busDoc) async {
+    await busesInformation
+        .doc(busDoc)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        // userBalance = documentSnapshot['Balance'];
+        buses['name'] = documentSnapshot['name'];
+        buses['seats'] = documentSnapshot['seats'];
       }
     });
     notifyListeners();
@@ -90,6 +107,19 @@ class MainVariables extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future updateBusSeats(String busDoc,int tickets) async {
+    int newSeats = buses['seats'] - tickets;
+    return await busesInformation
+        .doc(busDoc)
+        .set({'seats': newSeats}, SetOptions(merge: true));
+  }
+
+  Future updateDriverStatus(User user, String status) async {
+    return await usersInformation
+        .doc(user.uid)
+        .set({'status': status}, SetOptions(merge: true));
+  }
+
   void changePaymentMethod(String method) {
     _paymentMethod = method;
     notifyListeners();
@@ -107,6 +137,7 @@ class MainVariables extends ChangeNotifier {
     TotalPrice();
   }
 
+  // ignore: non_constant_identifier_names
   Future fillCartList(var CartProds) async {
     _userCart = [];
     for (int i = 0; i < CartProds.length; i++) {
@@ -115,9 +146,9 @@ class MainVariables extends ChangeNotifier {
           price: CartProds[i]['price'],
           uid: CartProds[i]['id']));
     }
-    print(_userCart);
   }
 
+  // ignore: non_constant_identifier_names
   void TotalPrice() {
     if (_userCart.isEmpty) {
       _total = 0;
@@ -141,19 +172,36 @@ class MainVariables extends ChangeNotifier {
     notifyListeners();
   }
 
+  void moveCamera(double lat, double lng) {
+    busLat = lat;
+    busLng = lng;
+    notifyListeners();
+  }
+
   List<cartItem> get userCart => _userCart;
 
   int get total => _total;
 
+  // ignore: non_constant_identifier_names
   int get UserBalance => userBalance;
 
   String get paymentMethod => _paymentMethod;
 
+  // ignore: non_constant_identifier_names
   Map<String, dynamic> get UserInfo => _userData;
 
+  // ignore: non_constant_identifier_names
   Map get UserDetails => userDetails;
 
+  // ignore: non_constant_identifier_names
   List get BusDetails => busDetails;
 
+  // ignore: non_constant_identifier_names
   Map get Buses => buses;
+
+  // ignore: non_constant_identifier_names
+  double get BusLat => busLat;
+
+  // ignore: non_constant_identifier_names
+  double get BusLng => busLng;
 }

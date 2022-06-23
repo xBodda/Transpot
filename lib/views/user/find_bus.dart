@@ -122,6 +122,7 @@ class _FindBusState extends State<FindBus> {
 
   @override
   Widget build(BuildContext context) {
+    // final args = ModalRoute.of(context)!.settings.arguments as FindBusScreenArguments;
     final mapModel = Provider.of<MapService>(context);
     return GestureDetector(
       // onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -183,7 +184,7 @@ class _FindBusState extends State<FindBus> {
                     children: [
                       TextFormField(
                         onTap: getOriginLocations,
-                        controller: mapModel.pickupFormFieldController,
+                        controller: _originController,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         keyboardType: TextInputType.emailAddress,
                         onSaved: (newValue) => place1 = newValue!,

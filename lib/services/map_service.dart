@@ -33,13 +33,17 @@ class MapService extends ChangeNotifier {
   var currentlat;
   var currentlong;
 
+  double busLat = 0;
+  double busLng = 0;
+
   MapService() {
     fetchNearbyDrivers(DummyData.nearbyDrivers);
-    _getUserLocation();
+    // _getUserLocation();
   }
 
   void fetchNearbyDrivers(List<Driver> list) {
-    if (list != null && list.isNotEmpty) {
+    if (list.isNotEmpty) {
+      // ignore: avoid_function_literals_in_foreach_calls
       list.forEach((driver) async {
         markers.add(Marker(
             markerId: MarkerId(driver.driverId),
@@ -52,7 +56,7 @@ class MapService extends ChangeNotifier {
     }
   }
 
-  void _getUserLocation() async {
+  void _getUserLocation() {
     _location.changeSettings(interval: 1000, accuracy: location.LocationAccuracy.low, distanceFilter: 10);
     // _location.enableBackgroundMode(enable: true);
     GeoData data;
@@ -112,6 +116,12 @@ class MapService extends ChangeNotifier {
     notifyListeners();
   }
 
+  void moveCamera(double lat, double lng) {
+    busLat = lat;
+    busLng = lng;
+    notifyListeners();
+  }
+
   Set<Marker> get markers => _markers;
 
   LatLng get currentPosition => _currentPosition;
@@ -124,9 +134,17 @@ class MapService extends ChangeNotifier {
 
   GoogleMapController get mapController => _mapController;
 
+  // ignore: non_constant_identifier_names
   get Currentlat => currentlat;
 
+  // ignore: non_constant_identifier_names
   get Currentlong => currentlong;
+
+  // ignore: non_constant_identifier_names
+  double get BusLat => busLat;
+
+  // ignore: non_constant_identifier_names
+  double get BusLng => busLng;
 
   get randomZoom => 13.0 + Random().nextInt(4);
 }

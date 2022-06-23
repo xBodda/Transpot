@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transpot/components/routes.dart';
 import 'package:transpot/components/splash_screen.dart';
 import 'package:transpot/services/auth_model.dart';
@@ -10,7 +9,6 @@ import 'package:transpot/services/map_service.dart';
 import 'package:transpot/services/notifier_service.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:transpot/views/user/checkout.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -53,6 +53,7 @@ dependencies:
   shared_preferences: ^2.0.15
   geolocator: ^8.2.1
   sliding_up_panel: ^2.0.0+1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
