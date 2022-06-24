@@ -149,7 +149,7 @@ class _FindBusState extends State<FindBus> {
                 child: GoogleMap(
                   mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
-                      target: const LatLng(30.07193729969429, 31.220732056799562),
+                      target: const LatLng(30.053077641676392, 31.24009107516267),
                       zoom: mapModel.currentZoom),
                   myLocationEnabled: trackLiveLocation,
                   // myLocationButtonEnabled: true,

@@ -166,19 +166,14 @@ class _PaymentState extends State<Payment>{
                             shrinkWrap: true,
                             itemCount: gv.userCart.length,
                             itemBuilder: (context, index) => ListTile(
-                                  title: Text(
-                                    '${gv.userCart[index].product}',
-                                    maxLines: 1,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  leading: Text("${gv.userCart[index].uid}"),
-                                  trailing: Text("${gv.userCart[index].price}  EGP"),
-                                )),
-                        // const ListTile(
-                        //   title: Text("Shipping fees"),
-                        //   trailing: Text("40"),
-                        // )
+                              title: Text(
+                                '${gv.userCart[index].product}',
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Text("${gv.userCart[index].price}  EGP"),
+                            )),
                       ],
                     )),
                 getDivider(),
@@ -292,6 +287,7 @@ class _PaymentState extends State<Payment>{
 
   void onPressedIconWithText(MainVariables gv, UserModel u) async {
       bool isValid = false;
+      bool isTickets = false;
       Future.delayed(const Duration(milliseconds: 600), () {
         try {
           if (gv.paymentMethod != "Select Method") {
@@ -370,51 +366,52 @@ class _PaymentState extends State<Payment>{
                   print(e);
                 }
               } else if (gv.userCart[i].product == "Regular Ticket") {
-              try {
-                if (gv.paymentMethod == "Wallet") {
-                  if (gv.UserDetails['Balance'] >= gv.userCart[i].price) {
-                    gv.updateBalance(user, gv.userCart[i].price);
-                    // gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Tickets Purchased"),
-                        duration: Duration(milliseconds: 3000),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: secondaryColorDark,
-                      ),
-                    );
-                    isValid = true;
+                isTickets = true;
+                try {
+                  if (gv.paymentMethod == "Wallet") {
+                    if (gv.UserDetails['Balance'] >= gv.userCart[i].price) {
+                      int totalSum = 0;
+                      for (int i = 0; i < gv.userCart.length; i++) {
+                          totalSum += gv.userCart[i].price;
+                      }
+                      gv.addDriverRide(user, gv.userCart[i].details);
+                      gv.updateBalance(user, totalSum);
+                      
+                      isValid = true;
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          action: SnackBarAction(
+                              label: "Go To Wallet",
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(Wallet.routeName);
+                              }),
+                          content: const Text("No Enough Balance"),
+                          duration: const Duration(milliseconds: 3000),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: secondaryColorDark,
+                        ),
+                      );
+                    }
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        action: SnackBarAction(
-                            label: "Go To Wallet",
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(Wallet.routeName);
-                            }),
-                        content: const Text("No Enough Balance"),
-                        duration: const Duration(milliseconds: 3000),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: secondaryColorDark,
-                      ),
-                    );
+                    gv.addDriverRide(user, gv.userCart[i].details);
+                    
+                    isValid = true;
                   }
-                } else {
-                  // gv.upgradePackage(user, int.parse(gv.userCart[i].uid));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Tickets Purchased"),
-                      duration: Duration(milliseconds: 3000),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: secondaryColorDark,
-                    ),
-                  );
-                  isValid = true;
+                } catch (e) {
+                  print(e);
                 }
-              } catch (e) {
-                print(e);
-              }
             }
+            }
+            if(isTickets) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Tickets Purchased"),
+                  duration: Duration(milliseconds: 3000),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: secondaryColorDark,
+                ),
+              );
             }
             if(isValid) {
               u.DeleteAttribute("cart");

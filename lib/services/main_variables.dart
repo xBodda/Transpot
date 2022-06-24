@@ -22,6 +22,8 @@ class MainVariables extends ChangeNotifier {
 
   final CollectionReference busesInformation = FirebaseFirestore.instance.collection('buses');
 
+  final CollectionReference ridesInformation = FirebaseFirestore.instance.collection('rides');
+
   late Map<String, dynamic> _userData;
 
   late int userBalance;
@@ -33,6 +35,8 @@ class MainVariables extends ChangeNotifier {
   List<cartItem> _userCart = [];
 
   List<dynamic> busDetails = [];
+
+  List<dynamic> ridesDetails = [];
 
   var userDetails = Map();
 
@@ -107,6 +111,21 @@ class MainVariables extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future getAllRides(User u) async {
+    QuerySnapshot querySnapshot = await ridesInformation.where('bus_id', isEqualTo: u.uid).get();
+
+    ridesDetails = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    print("buses: $ridesDetails");
+    notifyListeners();
+  }
+
+  Future dismissRide(String rideId) async {
+    ridesInformation
+    .doc(rideId)
+    .delete();
+  }
+
   Future updateBusSeats(String busDoc,int tickets) async {
     int newSeats = buses['seats'] - tickets;
     return await busesInformation
@@ -118,6 +137,27 @@ class MainVariables extends ChangeNotifier {
     return await usersInformation
         .doc(user.uid)
         .set({'status': status}, SetOptions(merge: true));
+  }
+
+  Future addDriverRide(User user, String busId) async {
+    String driverId = "";
+
+    await usersInformation.
+    where('bus_id', isEqualTo: busId).
+    get()
+    .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+            driverId = doc.id;
+        });
+    });
+
+    String id = ridesInformation.doc().id;
+
+    return await ridesInformation.doc(id).set({
+      'bus_id': driverId,
+      'user_id': user.uid,
+      'ride_id': id,
+    });
   }
 
   void changePaymentMethod(String method) {
@@ -144,7 +184,9 @@ class MainVariables extends ChangeNotifier {
       _userCart.add(cartItem(
           product: CartProds[i]['product'],
           price: CartProds[i]['price'],
-          uid: CartProds[i]['id']));
+          uid: CartProds[i]['id'],
+          details: CartProds[i]['details'],
+          ));
     }
   }
 
@@ -195,6 +237,9 @@ class MainVariables extends ChangeNotifier {
 
   // ignore: non_constant_identifier_names
   List get BusDetails => busDetails;
+
+  // ignore: non_constant_identifier_names
+  List get RidesDetails => ridesDetails;
 
   // ignore: non_constant_identifier_names
   Map get Buses => buses;

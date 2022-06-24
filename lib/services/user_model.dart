@@ -32,6 +32,7 @@ class UserModel {
       'lat': 0,
       'lng': 0,
       'status': 'online',
+      'bus_id': '',
     }, SetOptions(merge: true));
   }
 
@@ -48,11 +49,11 @@ class UserModel {
     });
   }
 
-  Future addToCart(String id, String product, int price) async {
+  Future addToCart(String id, String product, int price, String details) async {
     Map map = Map<String, dynamic>();
     return await usersInformation.doc(uid).set({
       'cart': FieldValue.arrayUnion([
-        map = {"id": id, "product": product, "price": price}
+        map = {"id": id, "product": product, "price": price, "details": details}
       ]),
     }, SetOptions(merge: true));
   }

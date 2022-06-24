@@ -193,7 +193,7 @@ class _BookTicketsState extends State<BookTickets> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      onPressedIconWithText(u);
+                      onPressedIconWithText(u, args.message);
                     },
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(width: 2, color: primaryColor),
@@ -232,7 +232,7 @@ class _BookTicketsState extends State<BookTickets> {
     return dropdownItems;
   }
 
-  onPressedIconWithText(UserModel u) async {
+  onPressedIconWithText(UserModel u, String busId) async {
     Future.delayed(const Duration(milliseconds: 400), () async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
@@ -245,7 +245,7 @@ class _BookTicketsState extends State<BookTickets> {
             Keyboard.hideKeyboard(context);
             print("tickets $_selectedTickets");
             for(int i = 0; i < _selectedTickets;i++) {
-              u.addToCart('$i', "Regular Ticket", 5);
+              u.addToCart("$i", "Regular Ticket", 5, busId);
             }
 
             // ignore: use_build_context_synchronously

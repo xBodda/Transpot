@@ -87,7 +87,7 @@ const List<String> governorates = [
   'South Sinai',
   'Suez',
 ];
-class DummyData { 
+class DummyData {
   static List<Driver> nearbyDrivers = [
     Driver(
         "First",
@@ -95,24 +95,24 @@ class DummyData {
         4,
         "FirstId",
         BusDetail(
-            "firstCarId", "firstCarCompany", "firstCarModel", " firstCarName"),
-        const LatLng(30.071654115870853, 31.22046920034743)),
+            "firstCarId", "A56 Bus", "firstCarModel", " firstCarName"),
+        const LatLng(30.05257879539065, 31.242255153834456)),
     Driver(
         "Second",
         "https://cbsnews2.cbsistatic.com/hub/i/r/2017/12/20/205852a8-1105-48b5-98d4-d9ec18a577e0/thumbnail/1200x630/8cb0b627b158660d1e0a681a76fb012c/uber-europe-uk-851372958.jpg",
         3,
         "Second",
-        BusDetail("secondCarId", "secondCarCompany", "secondCarModel",
+        BusDetail("secondCarId", "A71", "secondCarModel",
             " secondCarName"),
-        const LatLng(30.069291124259752, 31.21890815476264)),
+        const LatLng(30.05332171402042, 31.239465656660073)),
     Driver(
         "Third",
         "https://cbsnews2.cbsistatic.com/hub/i/r/2017/12/20/205852a8-1105-48b5-98d4-d9ec18a577e0/thumbnail/1200x630/8cb0b627b158660d1e0a681a76fb012c/uber-europe-uk-851372958.jpg",
         4,
         "ThirdId",
         BusDetail(
-            "thirdCarId", "thirdCarCompany", "thirdCarModel", " thridCarName"),
-        const LatLng(30.071110957748346, 31.22180494042988)),
+            "thirdCarId", "A43", "thirdCarModel", " thridCarName"),
+        const LatLng(30.055608449231343, 31.232786518210442)),
   ];
 }
 

@@ -39,6 +39,7 @@ class _BusState extends State<Bus> {
   void initState() {
     u = Provider.of<AuthModel>(context, listen: false).CurrentUser()!;
     allBuses = Provider.of<MainVariables>(context, listen: false).getAllBuses();
+    print(allBuses);
     super.initState();
   }
 
@@ -180,7 +181,7 @@ class _BusState extends State<Bus> {
                               )
                             );
                           },
-                        ) : Text(""),
+                        ) : const Text(""),
                     ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pushNamed(
@@ -188,7 +189,7 @@ class _BusState extends State<Bus> {
                         BookTickets.routeName,
                         arguments: ScreenArguments(
                           'Bus ID',
-                          '$busId',
+                          busId,
                         ),
                       );
                       },
@@ -242,7 +243,7 @@ class _BusState extends State<Bus> {
             // ignore: use_build_context_synchronously
             Keyboard.hideKeyboard(context);
             
-            u.addToCart('$_selectedTickets', "Regular Ticket", 5);
+            u.addToCart('$_selectedTickets', "Regular Ticket", 5, '$_selectedTickets');
 
             // ignore: use_build_context_synchronously
             Navigator.pushAndRemoveUntil(

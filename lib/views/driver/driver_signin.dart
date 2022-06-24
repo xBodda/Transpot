@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,8 @@ class _DriverSignInState extends State<DriverSignIn> {
 
   late String _email;
   late String _password;
+
+  String user_type = "";
 
   final List<String> _errors = [];
 
@@ -278,26 +281,52 @@ class _DriverSignInState extends State<DriverSignIn> {
           User? user = context.read<AuthModel>().CurrentUser();
 
           if (user != null) {
-            Keyboard.hideKeyboard(context);
+            user_type = await context.read<AuthModel>().getUserType(user);
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Welcome to Transpot"),
-                duration: Duration(milliseconds: 3000),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: secondaryColorDark,
-              ),
-            );
+            if (user_type == "driver") {
+              // ignore: use_build_context_synchronously
+              Keyboard.hideKeyboard(context);
 
-            await Future.delayed(const Duration(seconds: 2), () {});
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Welcome to Transpot"),
+                  duration: Duration(milliseconds: 3000),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: secondaryColorDark,
+                ),
+              );
 
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const DriverFindRide()),
-              (Route<dynamic> route) => false,
-            );
-            print("----------${user.email}----------");
-          } else {}
+              await Future.delayed(const Duration(seconds: 2), () {});
+
+              // ignore: use_build_context_synchronously
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const DriverFindRide()),
+                (Route<dynamic> route) => false,
+              );
+            } else {
+              // ignore: use_build_context_synchronously
+              await context.read<AuthModel>().signOut();
+
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  action: SnackBarAction(
+                      label: "Go To User",
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(DriverSignIn.routeName);
+                      }),
+                  content: const Text("Not A Driver Account!"),
+                  duration: const Duration(milliseconds: 3000),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: secondaryColorDark,
+                ),
+              );
+            }
+          } else {
+            
+          }
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

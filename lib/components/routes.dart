@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:transpot/views/driver/driver_find_ride.dart';
 import 'package:transpot/views/driver/driver_signin.dart';
 import 'package:transpot/views/driver/driver_signup.dart';
+import 'package:transpot/views/driver/ongoing_rides.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/signin.dart';
 import 'package:transpot/views/signup.dart';
@@ -32,4 +33,5 @@ final Map<String, WidgetBuilder> routes = {
   DriverSignIn.routeName: (context) => const DriverSignIn(),
   DriverSignUp.routeName: (context) => const DriverSignUp(),
   DriverFindRide.routeName: (context) => const DriverFindRide(),
+  OngoingRides.routeName: (context) => const OngoingRides(),
 };

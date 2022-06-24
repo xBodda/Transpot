@@ -75,8 +75,7 @@ class _PackagesState extends State<Packages> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      packageCard('Free Package',0.0, package == 1 ? 'Owned' : 'Free', u, 1, package),
-                      packageCard('Premium Package',150.0, package == 2 ? 'Owned' : 'Subscribe',u ,2, package),
+                      packageCard('Premium Package',28.0, package == 2 ? 'Owned' : 'Subscribe',u ,2, package),
                     ],
                   ),
                 ),
@@ -177,7 +176,7 @@ class _PackagesState extends State<Packages> {
             // ignore: use_build_context_synchronously
             Keyboard.hideKeyboard(context);
 
-            u.addToCart('2', "Premium Package", 150);
+            u.addToCart('2', "Premium Package", 28, '2');
 
             // ignore: use_build_context_synchronously
             Navigator.pushAndRemoveUntil(

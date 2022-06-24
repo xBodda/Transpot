@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:transpot/services/user_model.dart';
 
@@ -62,5 +63,22 @@ class AuthModel {
         print(e);
         rethrow;
       }
+  }
+
+  Future <String> getUserType(User user) async {
+    String userType = "";
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        userType = documentSnapshot['type'];
+      } else {
+        userType = 'null';
+      }
+    });
+    
+    return userType;
   }
 }
