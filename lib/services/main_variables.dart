@@ -56,6 +56,7 @@ class MainVariables extends ChangeNotifier {
         userBalance = documentSnapshot['Balance'];
         userDetails['Balance'] = documentSnapshot['Balance'];
         userDetails['Package'] = documentSnapshot['Package'];
+        userDetails['bus_id'] = documentSnapshot['bus_id'];
       }
     });
     notifyListeners();
@@ -76,7 +77,13 @@ class MainVariables extends ChangeNotifier {
   }
 
   Future updateUserLocation(User user, dynamic lat, dynamic lng) async {
-    // int newBalance = userDetails['Balance'] + balance;
+    getUserData(user);
+    if(userDetails['bus_id'] != "") {
+      await busesInformation
+          .doc(userDetails['bus_id'])
+          .set({'lat': lat, 'lng': lng}, SetOptions(merge: true));
+    }
+
     return await usersInformation
         .doc(user.uid)
         .set({'lat': lat, 'lng': lng}, SetOptions(merge: true));
@@ -137,6 +144,21 @@ class MainVariables extends ChangeNotifier {
     return await usersInformation
         .doc(user.uid)
         .set({'status': status}, SetOptions(merge: true));
+  }
+
+  Future <String> getBusStatus(String busId) async {
+    String current_status = "";
+
+    await usersInformation
+        .where('bus_id', isEqualTo: busId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        current_status = doc['status'];
+      });
+    });
+
+    return current_status;
   }
 
   Future addDriverRide(User user, String busId) async {

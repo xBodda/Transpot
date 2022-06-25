@@ -151,7 +151,7 @@ class _FindBusState extends State<FindBus> {
                   initialCameraPosition: CameraPosition(
                       target: const LatLng(30.053077641676392, 31.24009107516267),
                       zoom: mapModel.currentZoom),
-                  myLocationEnabled: trackLiveLocation,
+                  myLocationEnabled: true,
                   // myLocationButtonEnabled: true,
                   trafficEnabled: true,
                   tiltGesturesEnabled: false,

@@ -32,7 +32,7 @@ class UserModel {
       'lat': 0,
       'lng': 0,
       'status': 'online',
-      'bus_id': '',
+      'bus_id': "",
     }, SetOptions(merge: true));
   }
 

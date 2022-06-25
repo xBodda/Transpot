@@ -30,8 +30,8 @@ class MapService extends ChangeNotifier {
 
   LocationService _mapRepository = LocationService(); 
 
-  var currentlat;
-  var currentlong;
+  late double currentlat;
+  late double currentlong;
 
   double busLat = 0;
   double busLng = 0;
@@ -53,13 +53,13 @@ class MapService extends ChangeNotifier {
             icon: BitmapDescriptor.fromBytes(await Utils.getBytesFromAsset("assets/carIcon.png", 120))));
         notifyListeners();
       });
+      
     }
   }
 
-  void _getUserLocation() {
+  Future<void> getUserLocation() async{
     _location.changeSettings(interval: 1000, accuracy: location.LocationAccuracy.low, distanceFilter: 10);
     // _location.enableBackgroundMode(enable: true);
-    GeoData data;
     //get cureent address & lat & long
     //f 10 seconds are passed AND* if the phone is moved at least 5 meters, give the location.
     //location.changeSettings(accuracy: loc.LocationAccuracy.balanced,interval: 1000); ///not sure ,distanceFilter: 2
@@ -67,19 +67,15 @@ class MapService extends ChangeNotifier {
       print("error in listen location${onError}");
     }).listen((location.LocationData currentlocation) async {
       //GeoData convert current lat long to address
-      data = await Geocoder2.getDataFromCoordinates(
-          latitude: currentlocation.latitude!,
-          longitude: currentlocation.longitude!,
-          googleMapApiKey: API.apiKey);
-      //Formated Address
-      print("the cureent address is------${data.address}");
+      // print('the current live  lat is ${currentlocation.latitude}');
+      // print('the current live long is ${currentlocation.longitude}');
 
-      // currentlong = currentlocation.longitude;
-      // currentlat = currentlocation.latitude;
-      pickupFormFieldController.text = data.address;
+      currentlong = currentlocation.longitude!;
+      currentlat = currentlocation.latitude!;
+      // pickupFormFieldController.text = data.address;
       // _pickupPosition = _currentPosition;
-      print('the current live  lat is ${currentlocation.latitude}');
-      print('the current live long is ${currentlocation.longitude}');
+      print('the current live  lat is ${currentlong}');
+      print('the current live long is ${currentlat}');
     });
     // updatePickupMarker();
     notifyListeners();

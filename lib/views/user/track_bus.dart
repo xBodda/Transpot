@@ -23,8 +23,9 @@ import 'package:location/location.dart' as loc;
 class TrackBusScreenArguments {
   final double passedLat;
   final double passedLong;
+  final String busId;
 
-  TrackBusScreenArguments(this.passedLat, this.passedLong);
+  TrackBusScreenArguments(this.passedLat, this.passedLong, this.busId);
 }
 
 class TrackBus extends StatefulWidget {
@@ -65,9 +66,16 @@ class _TrackBusState extends State<TrackBus> {
   String place2 = 'Enter Destination';
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(30.047040, 31.346476),
-    zoom: 14,
+    target: LatLng(30.0459733, 31.352115),
+    zoom: 18,
   );
+
+  CameraPosition getCamera(double lat, double lng) {
+    return CameraPosition(
+      target: LatLng(lat, lng),
+      zoom: 18,
+      );
+  }
 
   @override
   void initState() {
@@ -89,49 +97,23 @@ class _TrackBusState extends State<TrackBus> {
   String busName = '';
   int busSeats = 0;
 
+  double latest_lat = 0;
+  double latest_lng = 0;
+
   User? userx = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as TrackBusScreenArguments;
+    latest_lat = args.passedLat;
+    latest_lng = args.passedLong;
+    String inString = latest_lat.toStringAsFixed(12);
+    double inDoubleLat = double.parse(inString);
+    String inStringg = latest_lng.toStringAsFixed(12);
+    double inDoubleLng = double.parse(inStringg);
     final mapModel = Provider.of<MapService>(context);
     final uiNotifiersModel = Provider.of<UINotifiersModel>(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (userx != null) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(userx!.uid)
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            userName = documentSnapshot['Full Name'];
-            phoneNumber = documentSnapshot['Phone Number'];
-            busId = documentSnapshot['bus_id'];
-            setState(() {
-              userName = userName;
-              phoneNumber = phoneNumber;
-              busId = documentSnapshot['bus_id'];
-            });
-          }
-        });
-
-        FirebaseFirestore.instance
-            .collection('buses')
-            .doc(busId)
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            busName = documentSnapshot['name'];
-            busSeats = documentSnapshot['seats'];
-            setState(() {
-              busSeats = busSeats;
-            });
-          }
-        });
-      }
-    });
 
     return GestureDetector(
-      // onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -142,7 +124,7 @@ class _TrackBusState extends State<TrackBus> {
         ),
         appBar: AppBar(
           title: const Text(
-            "Driver",
+            "Track Bus",
             style: TextStyle(
               color: secondaryColor,
               fontSize: 20,
@@ -183,10 +165,7 @@ class _TrackBusState extends State<TrackBus> {
                 ),
                 body: GoogleMap(
                   mapType: MapType.normal,
-                  initialCameraPosition: CameraPosition(
-                      target:
-                         LatLng(args.passedLat, args.passedLong),
-                      zoom: mapModel.currentZoom),
+                  initialCameraPosition: getCamera(inDoubleLat, inDoubleLng),
                   myLocationEnabled: trackLiveLocation,
                   // myLocationButtonEnabled: true,
                   trafficEnabled: true,
@@ -215,7 +194,7 @@ class _TrackBusState extends State<TrackBus> {
                   ],
                 ),
                 panel: BottomSheetTrackingMenu(
-                    userName, phoneNumber, busName, busSeats),
+                    userName, phoneNumber, busName, busSeats, args.busId),
               ),
             ]),
       ),

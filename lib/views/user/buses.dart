@@ -82,7 +82,7 @@ class _BusState extends State<Bus> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: gv.BusDetails.length,
-              itemBuilder: (context, index) => busCard(gv.BusDetails[index]['name'],gv.BusDetails[index]['seats'],u,gv.BusDetails[index]['id'],
+              itemBuilder: (context, index) => busCard(gv,gv.BusDetails[index]['name'],gv.BusDetails[index]['seats'],u,gv.BusDetails[index]['id'],
                     gv.BusDetails[index]['lat'],
                     gv.BusDetails[index]['lng'])
           ),
@@ -112,7 +112,8 @@ class _BusState extends State<Bus> {
     );
   }
 
-  Card busCard(String name, int seats, UserModel u, String busId, double lat, double lng) {
+  Card busCard(MainVariables mv,String name, int seats, UserModel u, String busId, double lat, double lng) {
+    String current_status = "";
     return Card(
       color: primaryColor,
       elevation: 10,
@@ -177,13 +178,19 @@ class _BusState extends State<Bus> {
                               TrackBus.routeName,
                               arguments: TrackBusScreenArguments(
                                 lat,
-                                lng
+                                lng,
+                                busId
                               )
                             );
                           },
                         ) : const Text(""),
                     ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
+                        current_status = await mv.getBusStatus(busId);
+                        // ignore: use_build_context_synchronously
+
+                        current_status != "offline" ?
+                        // ignore: use_build_context_synchronously
                         Navigator.pushNamed(
                         context,
                         BookTickets.routeName,
@@ -191,7 +198,16 @@ class _BusState extends State<Bus> {
                           'Bus ID',
                           busId,
                         ),
-                      );
+                      // ignore: use_build_context_synchronously
+                      ) : ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("This Bus Is Out Of Service"),
+                                duration: Duration(milliseconds: 3000),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: secondaryColorDark,
+                              ),
+                            );
+                      ;
                       },
                       style: ElevatedButton.styleFrom(
                         side: const BorderSide(

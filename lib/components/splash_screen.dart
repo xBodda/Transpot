@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,14 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:transpot/services/auth_model.dart';
 import 'package:transpot/services/main_variables.dart';
 import 'package:transpot/services/map_service.dart';
-import 'package:transpot/services/user_model.dart';
 import 'package:transpot/utils/size_config.dart';
 import 'package:transpot/views/driver/driver_find_ride.dart';
 import 'package:transpot/views/home.dart';
-import 'package:transpot/views/signup.dart';
 import 'package:transpot/views/user/find_bus.dart';
 
-import '../main.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -24,6 +23,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   bool isLoggedIn = false;
+  bool isTimer = false;
   MainVariables mv = MainVariables();
   MapService ms = MapService();
   late User user;
@@ -32,9 +32,14 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     User? user = context.read<AuthModel>().CurrentUser();
     if (user != null) {
-      // Navigator.pushNamed(context, FindBus.routeName);
       isLoggedIn = true;
-      // mv.updateUserLocation(user, ms.Currentlat, ms.Currentlong);
+      if(!isTimer) {
+        Timer.periodic(const Duration(seconds: 5), (timer) {
+          ms.getUserLocation();
+          mv.updateUserLocation(user, ms.Currentlat, ms.Currentlong);
+        });
+        isTimer = true;
+      }
     }
     super.initState();
   }

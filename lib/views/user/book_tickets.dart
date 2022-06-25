@@ -239,7 +239,6 @@ class _BookTicketsState extends State<BookTickets> {
         try {
           // ignore: use_build_context_synchronously
           User? user = context.read<AuthModel>().CurrentUser();
-
           if (user != null) {
             // ignore: use_build_context_synchronously
             Keyboard.hideKeyboard(context);
@@ -247,7 +246,6 @@ class _BookTicketsState extends State<BookTickets> {
             for(int i = 0; i < _selectedTickets;i++) {
               u.addToCart("$i", "Regular Ticket", 5, busId);
             }
-
             // ignore: use_build_context_synchronously
             Navigator.pushAndRemoveUntil(
               context,

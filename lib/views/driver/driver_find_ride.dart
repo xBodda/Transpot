@@ -185,7 +185,7 @@ class _DriverFindRideState extends State<DriverFindRide> {
                       target:
                           const LatLng(30.07193729969429, 31.220732056799562),
                       zoom: mapModel.currentZoom),
-                  myLocationEnabled: trackLiveLocation,
+                  myLocationEnabled: true,
                   // myLocationButtonEnabled: true,
                   trafficEnabled: true,
                   tiltGesturesEnabled: false,
@@ -407,33 +407,13 @@ class _DriverFindRideState extends State<DriverFindRide> {
       });
     }).listen((loc.LocationData currentlocation) async {
       //GeoData convert current lat long to address
-      data = await Geocoder2.getDataFromCoordinates(
-          latitude: currentlocation.latitude!,
-          longitude: currentlocation.longitude!,
-          googleMapApiKey: API.apiKey);
-      setState(() {
-        place1 = data.address;
-      });
-      //Formated Address
-      print("the cureent address is------${data.address}");
 
       currentlong = currentlocation.longitude;
       currentlat = currentlocation.latitude;
 
       print('the current live  lat is ${currentlocation.latitude}');
       print('the current live long is ${currentlocation.longitude}');
-
-      setState(() async {
-        if (_locationSubscription != null) {
-          if (place1 != data.address) {
-            setState(() async {
-              place1 = data.address;
-            });
-          }
-        }
-      });
     });
-    print("Current lat ${currentlat}");
   }
 
   void _setMarker(LatLng point) {

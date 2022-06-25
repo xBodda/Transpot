@@ -1,20 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:transpot/services/main_variables.dart';
 import 'package:transpot/services/map_service.dart';
 import 'package:transpot/services/notifier_service.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/user/book_tickets.dart';
 
 class BottomSheetTrackingMenu extends StatelessWidget {
   String userName = '';
   String phoneNumber = '';
   String busName = '';
   int busSeats = 0;
+  String busId = '';
+
+  String current_status = "";
   BottomSheetTrackingMenu(
-      this.userName, this.phoneNumber, this.busName, this.busSeats,
+      this.userName, this.phoneNumber, this.busName, this.busSeats, this.busId,
       {Key? key})
       : super(key: key);
+
+  MainVariables mv = MainVariables();
 
   @override
   Widget build(BuildContext context) {
@@ -36,128 +43,57 @@ class BottomSheetTrackingMenu extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // ElevatedButton.icon(
-                      //   onPressed: () async {},
-                      //   style: ElevatedButton.styleFrom(
-                      //     side: const BorderSide(width: 2, color: Colors.green),
-                      //     primary: Colors.white,
-                      //     padding: const EdgeInsets.symmetric(
-                      //         horizontal: 40, vertical: 15),
-                      //   ),
-                      //   icon: const Icon(
-                      //     Icons.online_prediction,
-                      //     color: Colors.green,
-                      //   ),
-                      //   label: const Text("I am online now",
-                      //       style: TextStyle(
-                      //           fontFamily: 'Lato',
-                      //           fontWeight: FontWeight.bold,
-                      //           color: Colors.green)),
-                      // ),
-                      // const Divider(
-                      //   color: secondaryColor,
-                      //   thickness: 2,
-                      // ),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          current_status = await mv.getBusStatus(busId);
+                          // ignore: use_build_context_synchronously
+
+                          current_status != "offline"
+                              ?
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushNamed(
+                                  context,
+                                  BookTickets.routeName,
+                                  arguments: ScreenArguments(
+                                    'Bus ID',
+                                    busId,
+                                  ),
+                                  // ignore: use_build_context_synchronously
+                                )
+                              : ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("This Bus Is Out Of Service"),
+                                    duration: Duration(milliseconds: 3000),
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: secondaryColorDark,
+                                  ),
+                                );
+                          ;
+                        },
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(width: 2, color: primaryColor),
+                          primary: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                        ),
+                        icon: const Icon(
+                          Icons.tab,
+                          color: primaryColor,
+                        ),
+                        label: const Text("Book Tickets",
+                            style: TextStyle(
+                                fontFamily: 'Lato',
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor)),
+                      ),
+                      const Divider(
+                        color: secondaryColor,
+                        thickness: 2,
+                      ),
                       SizedBox(height: getSuitableScreenHeight(20)),
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.person,
-                      //       color: primaryColor,
-                      //       size: getSuitableScreenWidth(20),
-                      //     ),
-                      //     SizedBox(width: getSuitableScreenHeight(5)),
-                      //     Text(
-                      //       "Driver Name: ",
-                      //       style: TextStyle(
-                      //         color: secondaryColorDark,
-                      //         fontSize: getSuitableScreenWidth(18),
-                      //         fontFamily: 'Lato',
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //     Text(
-                      //       "${userName}",
-                      //       style: const TextStyle(fontFamily: 'Lato'),
-                      //       textAlign: TextAlign.center,
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: getSuitableScreenHeight(20)),
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.phone,
-                      //       color: primaryColor,
-                      //       size: getSuitableScreenWidth(20),
-                      //     ),
-                      //     SizedBox(width: getSuitableScreenHeight(5)),
-                      //     Text(
-                      //       "Driver Phone Number: ",
-                      //       style: TextStyle(
-                      //         color: secondaryColorDark,
-                      //         fontSize: getSuitableScreenWidth(18),
-                      //         fontFamily: 'Lato',
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //     Text(
-                      //       "${phoneNumber}",
-                      //       style: const TextStyle(fontFamily: 'Lato'),
-                      //       textAlign: TextAlign.center,
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: getSuitableScreenHeight(20)),
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.bus_alert,
-                      //       color: primaryColor,
-                      //       size: getSuitableScreenWidth(20),
-                      //     ),
-                      //     SizedBox(width: getSuitableScreenHeight(5)),
-                      //     Text(
-                      //       "Bus Name: ",
-                      //       style: TextStyle(
-                      //         color: secondaryColorDark,
-                      //         fontSize: getSuitableScreenWidth(18),
-                      //         fontFamily: 'Lato',
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //     Text(
-                      //       "${busName}",
-                      //       style: const TextStyle(fontFamily: 'Lato'),
-                      //       textAlign: TextAlign.center,
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: getSuitableScreenHeight(20)),
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.chair_alt,
-                      //       color: primaryColor,
-                      //       size: getSuitableScreenWidth(20),
-                      //     ),
-                      //     SizedBox(width: getSuitableScreenHeight(5)),
-                      //     Text(
-                      //       "Remaining Seats: ",
-                      //       style: TextStyle(
-                      //         color: secondaryColorDark,
-                      //         fontSize: getSuitableScreenWidth(18),
-                      //         fontFamily: 'Lato',
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //     Text(
-                      //       "${busSeats}",
-                      //       style: const TextStyle(fontFamily: 'Lato'),
-                      //       textAlign: TextAlign.center,
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   )))
         ],
