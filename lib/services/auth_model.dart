@@ -51,6 +51,9 @@ class AuthModel {
         User? user = result.user;
 
         await UserModel(uid: user!.uid).addUserData(fullName, phoneNumber, governorate, address, type);
+        if(type == "driver") {
+          await UserModel(uid: user.uid).addBusToDriver();
+        }
         return result;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {

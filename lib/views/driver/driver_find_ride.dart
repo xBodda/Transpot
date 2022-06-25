@@ -111,19 +111,21 @@ class _DriverFindRideState extends State<DriverFindRide> {
           }
         });
 
-        FirebaseFirestore.instance
-            .collection('buses')
-            .doc(busId)
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            busName = documentSnapshot['name'];
-            busSeats = documentSnapshot['seats'];
-            setState(() {
-              busSeats = busSeats;
-            });
-          }
-        });
+        if(busId != "") {
+          FirebaseFirestore.instance
+              .collection('buses')
+              .doc(busId)
+              .get()
+              .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) {
+              busName = documentSnapshot['name'];
+              busSeats = documentSnapshot['seats'];
+              setState(() {
+                busSeats = busSeats;
+              });
+            }
+          });
+        }
       }
     });
     

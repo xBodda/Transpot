@@ -78,7 +78,7 @@ class MainVariables extends ChangeNotifier {
 
   Future updateUserLocation(User user, dynamic lat, dynamic lng) async {
     getUserData(user);
-    if(userDetails['bus_id'] != "") {
+    if(userDetails['bus_id'] != null) {
       await busesInformation
           .doc(userDetails['bus_id'])
           .set({'lat': lat, 'lng': lng}, SetOptions(merge: true));

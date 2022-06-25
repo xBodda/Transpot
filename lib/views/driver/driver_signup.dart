@@ -6,6 +6,7 @@ import 'package:transpot/utils/FormError.dart';
 import 'package:transpot/utils/constants.dart';
 import 'package:transpot/utils/keyboard.dart';
 import 'package:transpot/utils/size_config.dart';
+import 'package:transpot/views/driver/driver_find_ride.dart';
 import 'package:transpot/views/home.dart';
 import 'package:transpot/views/user/find_bus.dart';
 
@@ -485,7 +486,7 @@ class _DriverSignUpState extends State<DriverSignUp> {
             await Future.delayed(const Duration(seconds: 2), () {});
 
             // ignore: use_build_context_synchronously
-            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const FindBus()),(Route<dynamic> route) => false,);
+            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const DriverFindRide()),(Route<dynamic> route) => false,);
             print("----------${user.email}----------");
           } else {
 

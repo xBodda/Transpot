@@ -59,10 +59,8 @@ class MapService extends ChangeNotifier {
 
   Future<void> getUserLocation() async{
     _location.changeSettings(interval: 1000, accuracy: location.LocationAccuracy.low, distanceFilter: 10);
-    // _location.enableBackgroundMode(enable: true);
     //get cureent address & lat & long
     //f 10 seconds are passed AND* if the phone is moved at least 5 meters, give the location.
-    //location.changeSettings(accuracy: loc.LocationAccuracy.balanced,interval: 1000); ///not sure ,distanceFilter: 2
     _locationSubscription = _location.onLocationChanged.handleError((onError) {
       print("error in listen location${onError}");
     }).listen((location.LocationData currentlocation) async {
@@ -72,10 +70,6 @@ class MapService extends ChangeNotifier {
 
       currentlong = currentlocation.longitude!;
       currentlat = currentlocation.latitude!;
-      // pickupFormFieldController.text = data.address;
-      // _pickupPosition = _currentPosition;
-      print('the current live  lat is ${currentlong}');
-      print('the current live long is ${currentlat}');
     });
     // updatePickupMarker();
     notifyListeners();

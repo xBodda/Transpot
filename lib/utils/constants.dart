@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:transpot/models/driver.dart';
 import 'package:transpot/utils/size_config.dart';
 
-const primaryColor = Color(0xffdaa520);
+const primaryColor = Color.fromARGB(255, 2, 79, 141);
 const primaryLightColor = Color(0xffebeded);
 const cardBackgroundColor = Color(0xfff3f4f4);
 const primaryGradientColor = LinearGradient(

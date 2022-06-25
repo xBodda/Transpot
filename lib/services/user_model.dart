@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
 
 class UserModel {
   final String uid;
   UserModel({required this.uid});
 
+  Random random = Random();
+
   final CollectionReference usersInformation = FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference busesInformation = FirebaseFirestore.instance.collection('buses');
 
   final CollectionReference orders = FirebaseFirestore.instance.collection('orders');
 
@@ -47,6 +52,24 @@ class UserModel {
         userStatus = documentSnapshot['status'];
       }
     });
+  }
+
+  Future addBusToDriver() async {
+    String id = busesInformation.doc().id;
+    int busName = random.nextInt(100);
+
+    await usersInformation
+        .doc(uid)
+        .set({'bus_id': id}, SetOptions(merge: true));
+
+    return busesInformation.doc(id).set({
+      'destination': "",
+      'id': id,
+      'lat': 0,
+      'lng': 0,
+      'name': 'A$busName',
+      'seats': 10,
+    }, SetOptions(merge: true));
   }
 
   Future addToCart(String id, String product, int price, String details) async {
