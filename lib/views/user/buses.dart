@@ -127,15 +127,15 @@ class _BusState extends State<Bus> {
               ListTile(
                 leading: const CircleAvatar(
                   radius: 30,
-                  backgroundColor: primaryColor,
-                  backgroundImage: NetworkImage('https://images.unsplash.com/photo-1562620669-98104534c6cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80'),
+                  backgroundColor: secondaryColor,
+                  backgroundImage: NetworkImage('https://www.bus-planet.com/bus/pictures/Egypt/M-Farid-289.jpg'),
                   child: Text(
                     "",
                   ),
                 ),
                 title: Text(
                   name,
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 subtitle: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -147,14 +147,17 @@ class _BusState extends State<Bus> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 2.0),
                           child: Text(
-                              "$formatter, 10:00 AM"
+                              "$formatter, 10:00 AM",
+                              style: const TextStyle(color: Colors.white)
                               ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 2.0),
                           child: Text(
-                              "Seats Available: $seats"
+                              "Seats Available: $seats",
+                            style: const TextStyle(
+                                color: Colors.white)
                               ),
                         ),
                       ],
