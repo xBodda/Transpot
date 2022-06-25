@@ -28,6 +28,11 @@ class _PaymentState extends State<Payment>{
   late Future futureCart;
   late User u;
 
+  int cardNum = 0;
+  int expirymonth = 0;
+  int expiryyear = 0;
+  int cvv = 0;
+
   late int total_cost = 0;
 
   @override
@@ -179,6 +184,142 @@ class _PaymentState extends State<Payment>{
                 getDivider(),
                 const SizedBox(
                   height: 30,
+                ),
+                gv.paymentMethod == "Credit/Debit Card" ? 
+                Container(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) {
+                                cardNum = value as int;
+                              },
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Lato',
+                                    color: secondaryColorDark.withOpacity(0.5),
+                                    fontWeight: FontWeight.bold),
+                                labelText: "Credit Card Number",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: getSuitableScreenWidth(20),
+                                    horizontal: getSuitableScreenWidth(30)),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(
+                                      right: getSuitableScreenWidth(26)),
+                                  child: Icon(
+                                    Icons.credit_card,
+                                    size: getSuitableScreenWidth(28),
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) {
+                                expirymonth = value as int;
+                              },
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Lato',
+                                    color: secondaryColorDark.withOpacity(0.5),
+                                    fontWeight: FontWeight.bold),
+                                labelText: "Expiry Month",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: getSuitableScreenWidth(20),
+                                    horizontal: getSuitableScreenWidth(30)),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(
+                                      right: getSuitableScreenWidth(26)),
+                                  child: Icon(
+                                    Icons.calendar_month,
+                                    size: getSuitableScreenWidth(28),
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) {
+                                expiryyear = value as int;
+                              },
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Lato',
+                                    color: secondaryColorDark.withOpacity(0.5),
+                                    fontWeight: FontWeight.bold),
+                                labelText: "Expiry Year",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: getSuitableScreenWidth(20),
+                                    horizontal: getSuitableScreenWidth(30)),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(
+                                      right: getSuitableScreenWidth(26)),
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    size: getSuitableScreenWidth(28),
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) {
+                                cvv = value as int;
+                              },
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(
+                                    fontFamily: 'Lato',
+                                    color: secondaryColorDark.withOpacity(0.5),
+                                    fontWeight: FontWeight.bold),
+                                labelText: "CVV",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: getSuitableScreenWidth(20),
+                                    horizontal: getSuitableScreenWidth(30)),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(
+                                      right: getSuitableScreenWidth(26)),
+                                  child: Icon(
+                                    Icons.lock,
+                                    size: getSuitableScreenWidth(28),
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ]
+                    ),
+                ) 
+                : const Text(""),
+                const SizedBox(
+                    height: 30,
                 ),
                 termsAndConditionsAgreement(context),
                 Container(
@@ -374,7 +515,7 @@ class _PaymentState extends State<Payment>{
                       for (int i = 0; i < gv.userCart.length; i++) {
                           totalSum += gv.userCart[i].price;
                       }
-                      gv.addDriverRide(user, gv.userCart[i].details);
+                      gv.addDriverRide(user, gv.userCart[i].details, "Wallet");
                       gv.updateBalance(user, totalSum);
                       
                       isValid = true;
@@ -394,7 +535,7 @@ class _PaymentState extends State<Payment>{
                       );
                     }
                   } else {
-                    gv.addDriverRide(user, gv.userCart[i].details);
+                    gv.addDriverRide(user, gv.userCart[i].details, "Credit/Debit Card");
                     
                     isValid = true;
                   }

@@ -161,7 +161,7 @@ class MainVariables extends ChangeNotifier {
     return current_status;
   }
 
-  Future addDriverRide(User user, String busId) async {
+  Future addDriverRide(User user, String busId, String payment_method) async {
     String driverId = "";
 
     await usersInformation.
@@ -179,6 +179,7 @@ class MainVariables extends ChangeNotifier {
       'bus_id': driverId,
       'user_id': user.uid,
       'ride_id': id,
+      'payment_method': payment_method
     });
   }
 
