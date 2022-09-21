@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
                   Container(
                     alignment: Alignment.center,
                     child: Image.asset(
-                      'assets/bg.jpeg',
+                      'assets/bg.jpg',
                       height: 350,
                       width: double.infinity,
                       fit: BoxFit.fitWidth,
