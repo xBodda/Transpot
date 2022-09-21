@@ -22,11 +22,11 @@ I developed a fully functioning transportaion flutter application that is compat
 | :---: | :---: | :---:|
 | ![Home](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195418.png) | ![Sign-In](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195555.png) | ![Sign-Up](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195611.png) |
 | Main_Screen | SideBar | Packages_Screen |
-| ![Main-Screen](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195716.png) | ![Side-Bar](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195733.png) | ![Packages]([https://user-images.githubusercontent.com/32794378/141523046-14edc430-2cfb-4569-bd1b-e0b674248d2d.png](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195757.png)) |
+| ![Main-Screen](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195716.png) | ![Side-Bar](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195733.png) | ![Packages](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195757.png) |
 | Wallet_Screen | TopUp_Screen | AvailableBuses_Screen |
 | ![Wallet](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195809.png) | ![TopUp](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195824.png) | ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195934.png) |
 | Checkout_Screen | TopUp_Screen | Drive_Screen |
-| ![Checkout]() | ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195913.png) | ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-200122.png) |
+| ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195854.png) | ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-195913.png) | ![Checkout](https://github.com/xBodda/Transpot/blob/master/SS/Screenshot_20220921-200122.png) |
 
 ## Resources
 The following resources were used during the development of this project:
