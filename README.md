@@ -35,6 +35,3 @@ The following resources were used during the development of this project:
 - [**FlutterFire documentation**](https://firebase.flutter.dev/docs/overview)
 - [**Flutter Apprentice Book**](https://www.raywenderlich.com/books/flutter-apprentice/v2.0)
 - [**Stack Overflow: Flutter**](https://stackoverflow.com/questions/tagged/flutter)
-- [**Some UI inspirations**](https://github.com/abuanwar072/E-commerce-Complete-Flutter-UI)
-
-**Note:** I uploaded this project to github only to showcase my work and you cannot use it commercially by any means.
